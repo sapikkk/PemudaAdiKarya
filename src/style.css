@@ -1,0 +1,326 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Global Styles untuk PrimeVue Dark Theme */
+
+/* DataTable Dark Theme */
+.dark .p-datatable {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark .p-datatable .p-datatable-header {
+  background-color: var(--surface-100) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+.dark .p-datatable .p-datatable-thead > tr > th {
+  background-color: var(--surface-100) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+  font-weight: 600;
+}
+
+.dark .p-datatable .p-datatable-tbody > tr {
+  background-color: var(--surface-card) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.dark .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background-color: var(--surface-50) !important;
+}
+
+.dark .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: var(--surface-100) !important;
+}
+
+.dark .p-datatable .p-datatable-tbody > tr > td {
+  color: var(--text-color) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.dark .p-datatable .p-datatable-footer {
+  background-color: var(--surface-100) !important;
+  border-top: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Paginator Dark Theme */
+.dark .p-paginator {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+.dark .p-paginator .p-paginator-pages .p-paginator-page {
+  background-color: transparent !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark .p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background-color: var(--surface-100) !important;
+}
+
+.dark .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.dark .p-paginator .p-paginator-first,
+.dark .p-paginator .p-paginator-prev,
+.dark .p-paginator .p-paginator-next,
+.dark .p-paginator .p-paginator-last {
+  background-color: transparent !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark .p-paginator .p-paginator-first:hover,
+.dark .p-paginator .p-paginator-prev:hover,
+.dark .p-paginator .p-paginator-next:hover,
+.dark .p-paginator .p-paginator-last:hover {
+  background-color: var(--surface-100) !important;
+}
+
+/* Card Dark Theme */
+.dark .p-card {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+.dark .p-card .p-card-title {
+  color: var(--text-color) !important;
+}
+
+.dark .p-card .p-card-content {
+  color: var(--text-color) !important;
+}
+
+/* Button Dark Theme */
+.dark .p-button.p-button-success {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+}
+
+.dark .p-button.p-button-success:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+}
+
+.dark .p-button.p-button-danger {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+.dark .p-button.p-button-danger:hover {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+.dark .p-button.p-button-text {
+  color: var(--text-color) !important;
+}
+
+.dark .p-button.p-button-text:hover {
+  background-color: var(--surface-100) !important;
+}
+
+/* Progress Bar Dark Theme */
+.dark .p-progressbar {
+  background-color: var(--surface-200) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark .p-progressbar .p-progressbar-value {
+  background-color: var(--primary-color) !important;
+}
+
+/* Chart Dark Theme */
+.dark .p-chart {
+  background-color: var(--surface-card) !important;
+}
+
+/* Dialog Dark Theme */
+.dark .p-dialog {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark .p-dialog .p-dialog-header {
+  background-color: var(--surface-100) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+.dark .p-dialog .p-dialog-content {
+  background-color: var(--surface-card) !important;
+  color: var(--text-color) !important;
+}
+
+/* Input Dark Theme */
+.dark .p-inputtext {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+.dark .p-inputtext:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+}
+
+.dark .p-dropdown {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+.dark .p-dropdown:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+}
+
+.dark .p-dropdown-panel {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark .p-dropdown-item {
+  color: var(--text-color) !important;
+}
+
+.dark .p-dropdown-item:hover {
+  background-color: var(--surface-100) !important;
+}
+
+/* Gantt Chart Dark Theme */
+.dark .gantt-container {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.dark .gantt-header {
+  background-color: var(--surface-100) !important;
+  color: var(--text-color) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.dark .gantt-row {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.dark .gantt-row:nth-child(even) {
+  background-color: var(--surface-50) !important;
+}
+
+.dark .gantt-task {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+/* Toast Dark Theme */
+.dark .p-toast .p-toast-message {
+  background-color: var(--surface-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+.dark .p-toast .p-toast-message.p-toast-message-success {
+  background-color: var(--surface-card) !important;
+  border-left: 4px solid #10b981 !important;
+}
+
+.dark .p-toast .p-toast-message.p-toast-message-error {
+  background-color: var(--surface-card) !important;
+  border-left: 4px solid #ef4444 !important;
+}
+
+.dark .p-toast .p-toast-message.p-toast-message-warn {
+  background-color: var(--surface-card) !important;
+  border-left: 4px solid #f59e0b !important;
+}
+
+.dark .p-toast .p-toast-message.p-toast-message-info {
+  background-color: var(--surface-card) !important;
+  border-left: 4px solid #3b82f6 !important;
+}

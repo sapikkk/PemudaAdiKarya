@@ -1,0 +1,678 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin Utama",
+      "email": "1@example.com",
+      "password": "admin",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "User Biasa",
+      "email": "user@example.com",
+      "password": "userpassword",
+      "role": "user"
+    },
+    {
+      "id": "2b0c",
+      "name": "sapik",
+      "email": "sapik@gmail.com",
+      "password": "password",
+      "role": "user"
+    }
+  ],
+  "divisions": [
+    {
+      "id": "1",
+      "name": "Penasihat"
+    },
+    {
+      "id": "2",
+      "name": "Pelaksana"
+    },
+    {
+      "id": "3",
+      "name": "Sekretaris Pelaksana"
+    },
+    {
+      "id": "4",
+      "name": "Bendahara Pelaksana"
+    },
+    {
+      "id": "5",
+      "name": "Acara"
+    },
+    {
+      "id": "6",
+      "name": "Perlengkapan"
+    },
+    {
+      "id": "7",
+      "name": "Konsumsi"
+    },
+    {
+      "id": "8",
+      "name": "Publikasi & Dokumentasi"
+    },
+    {
+      "id": "9",
+      "name": "Pendanaan"
+    },
+    {
+      "id": "10",
+      "name": "Dekorasi"
+    },
+    {
+      "id": "11",
+      "name": "Transportasi"
+    },
+    {
+      "id": "12",
+      "name": "lomba batita"
+    },
+    {
+      "id": "13",
+      "name": "lomba balita"
+    },
+    {
+      "id": "14",
+      "name": "lomba sd"
+    },
+    {
+      "id": "15",
+      "name": "lomba smp"
+    },
+    {
+      "id": "16",
+      "name": "lomba ibuk-ibuk"
+    },
+    {
+      "id": "17",
+      "name": "lomba domino"
+    },
+    {
+      "id": "18",
+      "name": "lomba tarik tambang"
+    }
+  ],
+  "members": [
+    {
+      "name": "Pak Sutaji",
+      "divisionId": "1",
+      "id": "da81"
+    },
+    {
+      "id": "3324",
+      "name": "PAK WARDI",
+      "divisionId": "1"
+    },
+    {
+      "name": "Jakfar Shodiq",
+      "divisionId": "3",
+      "id": "0403"
+    },
+    {
+      "name": "Kak Dini",
+      "divisionId": "4",
+      "id": "11d9"
+    },
+    {
+      "name": "Prasetya Ramdani",
+      "divisionId": "4",
+      "id": "31ec"
+    },
+    {
+      "name": "Prasetya Ramdani",
+      "divisionId": "12",
+      "id": "3b20"
+    },
+    {
+      "name": "Nopal",
+      "divisionId": "6",
+      "id": "71b4"
+    },
+    {
+      "name": "Zidan",
+      "divisionId": "5",
+      "id": "ad27"
+    },
+    {
+      "name": "Rafi",
+      "divisionId": "7",
+      "id": "21a6"
+    },
+    {
+      "name": "Rafly R",
+      "divisionId": "10",
+      "id": "89fd"
+    },
+    {
+      "name": "Syafiq",
+      "divisionId": "18",
+      "id": "89f7"
+    },
+    {
+      "id": "f8f3",
+      "name": "Syafiq",
+      "divisionId": "2"
+    },
+    {
+      "id": "462e",
+      "name": "Jakfar Shodiq",
+      "divisionId": "17"
+    },
+    {
+      "id": "b5e8",
+      "name": "Zidan",
+      "divisionId": "16"
+    },
+    {
+      "id": "81fd",
+      "name": "Rafly R",
+      "divisionId": "13"
+    },
+    {
+      "id": "b69f",
+      "name": "Nopal",
+      "divisionId": "14"
+    },
+    {
+      "id": "b28d",
+      "name": "Rafi",
+      "divisionId": "15"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "ad3c",
+      "status": "Disetujui",
+      "submissionDate": "2025-07-24T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:28:18.799Z",
+          "log": "Proposal \"CV. Ramindo Karya Abadi\" dibuat oleh Kak Dini."
+        },
+        {
+          "timestamp": "2025-07-25T10:34:19.276Z",
+          "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\"."
+        },
+        {
+          "timestamp": "2025-07-25T10:34:54.300Z",
+          "log": "Status diubah dari \"Diproses\" menjadi \"Disetujui\". Disposisi diperbarui menjadi \"sudah di transfer melalui norek kak dini\". Respon donatur diperbarui menjadi \"sudah selesai.\"."
+        }
+      ],
+      "name": "CV. Ramindo Karya Abadi",
+      "submitterName": "Kak Dini",
+      "disposition": "sudah di transfer melalui norek kak dini",
+      "donorResponse": "sudah selesai.",
+      "lastUpdated": "2025-07-25T10:34:54.300Z"
+    },
+    {
+      "id": "6ceb",
+      "status": "Disetujui",
+      "submissionDate": "2025-07-25T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:28:49.712Z",
+          "log": "Proposal \"Ferry gondaldi\" dibuat oleh syafiq."
+        },
+        {
+          "timestamp": "2025-07-25T10:37:47.912Z",
+          "log": "Status diubah dari \"Diajukan\" menjadi \"Disetujui\". Disposisi diperbarui menjadi \"sudah di transfer\". Respon donatur diperbarui menjadi \"sudah di respon dan selesai\"."
+        }
+      ],
+      "name": "Ferry gonaldi",
+      "submitterName": "syafiq",
+      "disposition": "sudah di transfer",
+      "donorResponse": "sudah di respon dan selesai",
+      "lastUpdated": "2025-07-26T16:20:22.012Z"
+    },
+    {
+      "id": "7878",
+      "status": "Disetujui",
+      "submissionDate": "2025-07-23T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:29:53.562Z",
+          "log": "Proposal \"Kartama Skin Care\" dibuat oleh sapik."
+        },
+        {
+          "timestamp": "2025-07-25T10:36:45.293Z",
+          "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\". Disposisi diperbarui menjadi \"sedang transfer\". Respon donatur diperbarui menjadi \"maaf belum bisa bergabung\"."
+        },
+        {
+          "timestamp": "2025-07-25T10:36:57.029Z",
+          "log": "Status diubah dari \"Diproses\" menjadi \"Disetujui\". Disposisi diperbarui menjadi \"sudah  transfer\"."
+        }
+      ],
+      "name": "Kartama Skin Care",
+      "submitterName": "sapik",
+      "disposition": "sudah  transfer",
+      "donorResponse": "maaf belum bisa bergabung",
+      "lastUpdated": "2025-07-25T10:36:57.030Z"
+    },
+    {
+      "id": "3070",
+      "status": "Diproses",
+      "submissionDate": "2025-07-25T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:30:44.869Z",
+          "log": "Proposal \"PRIORITAS GROUP WILAYAH III\" dibuat oleh sapik."
+        },
+        {
+          "timestamp": "2025-07-25T10:38:20.262Z",
+          "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\". Disposisi diperbarui menjadi \"belum jumpa sama orang tua pemilik untuk pembicaraan lanjut\". Respon donatur diperbarui menjadi \"sudah di respon melalui wa\"."
+        }
+      ],
+      "name": "PRIORITAS GROUP WILAYAH III",
+      "submitterName": "sapik",
+      "disposition": "belum jumpa sama orang tua pemilik untuk pembicaraan lanjut",
+      "donorResponse": "sudah di respon melalui wa",
+      "lastUpdated": "2025-07-25T10:38:20.262Z"
+    },
+    {
+      "id": "e798",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-25T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:31:50.372Z",
+          "log": "Proposal \"Ikhtiar Mulia Konstruksi (IMK)\" dibuat oleh sapik."
+        },
+        {
+          "timestamp": "2025-07-25T10:36:23.038Z",
+          "log": "Disposisi diperbarui menjadi \"belum ada jawaban\"."
+        }
+      ],
+      "name": "Ikhtiar Mulia Konstruksi (IMK)",
+      "submitterName": "sapik",
+      "disposition": "belum ada jawaban",
+      "donorResponse": "sudah di jawab dan minta diingatkan lagi nanti",
+      "lastUpdated": "2025-07-25T10:36:23.038Z"
+    },
+    {
+      "id": "8bd2",
+      "status": "Diproses",
+      "submissionDate": "2025-07-26T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:32:22.453Z",
+          "log": "Proposal \"KIMIA FARMA\" dibuat oleh sapik."
+        },
+        {
+          "timestamp": "2025-07-26T06:41:30.498Z",
+          "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\". Disposisi diperbarui menjadi \"menunggu konfirmasi dari pihak atasan kak uul\". Respon donatur diperbarui menjadi \"akan di cek minggu ini karena belum banyak ke kantor\"."
+        }
+      ],
+      "name": "KIMIA FARMA",
+      "submitterName": "sapik",
+      "disposition": "menunggu konfirmasi dari pihak atasan kak uul",
+      "lastUpdated": "2025-07-26T06:41:30.499Z",
+      "donorResponse": "akan di cek minggu ini karena belum banyak ke kantor"
+    },
+    {
+      "id": "f71e",
+      "status": "Diproses",
+      "submissionDate": "2025-07-25T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:32:56.498Z",
+          "log": "Proposal \"Proyek AMP Riau\" dibuat oleh Sapik."
+        },
+        {
+          "timestamp": "2025-07-25T10:35:55.598Z",
+          "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\". Respon donatur diperbarui menjadi \"minggu ini bisa di beritahu progressnya seperti apa\"."
+        }
+      ],
+      "name": "Proyek AMP Riau",
+      "submitterName": "Sapik",
+      "disposition": "sudah dengan om kevin",
+      "donorResponse": "minggu ini bisa di beritahu progressnya seperti apa",
+      "lastUpdated": "2025-07-25T10:35:55.599Z"
+    },
+    {
+      "id": "222c",
+      "status": "Diproses",
+      "submissionDate": "2025-07-22T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-25T10:33:52.412Z",
+          "log": "Proposal \"Proyek Sigli Banda Aceh\" dibuat oleh Sapik."
+        },
+        {
+          "timestamp": "2025-07-25T10:35:24.303Z",
+          "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\". Disposisi diperbarui menjadi \"belum ada jawaban\". Respon donatur diperbarui menjadi \"sudah sampai sana belum ada keputusan cair. dan menunggu keputusan selanjutnya\n\"."
+        }
+      ],
+      "name": "Proyek Sigli Banda Aceh",
+      "submitterName": "Sapik",
+      "disposition": "belum ada jawaban",
+      "donorResponse": "sudah sampai sana belum ada keputusan cair. dan menunggu keputusan selanjutnya\n",
+      "lastUpdated": "2025-07-25T10:35:24.304Z"
+    },
+    {
+      "id": "e6b4",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-26T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-26T07:23:09.552Z",
+          "log": "Proposal \"Ali Mahfud\" dibuat oleh Syafiq."
+        },
+        {
+          "timestamp": "2025-07-26T07:45:20.185Z",
+          "log": "Disposisi diperbarui menjadi \"bersedia menjadi sponsor\". Respon donatur diperbarui menjadi \"kirim file nya. \"."
+        },
+        {
+          "timestamp": "2025-07-26T07:45:30.105Z",
+          "log": "Respon donatur diperbarui menjadi \"belum ada balasan\"."
+        }
+      ],
+      "name": "Ali Mahfud",
+      "submitterName": "Syafiq",
+      "disposition": "bersedia menjadi sponsor",
+      "lastUpdated": "2025-07-26T07:45:30.105Z",
+      "donorResponse": "belum ada balasan"
+    },
+    {
+      "id": "d1e3",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-26T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-26T07:26:57.351Z",
+          "log": "Proposal \"Samsu\" dibuat oleh Syafiq."
+        }
+      ],
+      "name": "Samsu",
+      "submitterName": "Syafiq",
+      "disposition": "bismillah",
+      "lastUpdated": "2025-07-26T07:26:57.351Z"
+    },
+    {
+      "id": "a254",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-26T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-26T07:30:35.745Z",
+          "log": "Proposal \"Muntaryanto\" dibuat oleh syafiq."
+        },
+        {
+          "timestamp": "2025-07-26T07:45:51.282Z",
+          "log": "Disposisi diperbarui menjadi \"sudah di kirim\". Respon donatur diperbarui menjadi \"belum ada balasan\"."
+        }
+      ],
+      "name": "Muntaryanto",
+      "submitterName": "syafiq",
+      "disposition": "sudah di kirim",
+      "lastUpdated": "2025-07-26T07:45:51.282Z",
+      "donorResponse": "belum ada balasan"
+    },
+    {
+      "id": "aabe",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-26T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-26T07:35:24.077Z",
+          "log": "Proposal \"Teguh\" dibuat oleh sapik."
+        },
+        {
+          "timestamp": "2025-07-26T07:44:40.463Z",
+          "log": "Disposisi diperbarui menjadi \"sudah di kabari, dan proposal di ajukan via wa\". Respon donatur diperbarui menjadi \"minta berikan di teras rumah\"."
+        },
+        {
+          "timestamp": "2025-07-26T07:44:56.496Z",
+          "log": "Disposisi diperbarui menjadi \"ajukan via wa\". Respon donatur diperbarui menjadi \"sudah diterima dan di baca\"."
+        }
+      ],
+      "name": "Teguh",
+      "submitterName": "sapik",
+      "disposition": "ajukan via wa",
+      "lastUpdated": "2025-07-26T07:44:56.497Z",
+      "donorResponse": "sudah diterima dan di baca"
+    },
+    {
+      "id": "e7db",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-26T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-26T07:44:14.090Z",
+          "log": "Proposal \"Sudarmanto\" dibuat oleh sapik."
+        }
+      ],
+      "name": "Sudarmanto",
+      "submitterName": "sapik",
+      "disposition": "baru di kabari\n",
+      "lastUpdated": "2025-07-26T07:44:14.091Z"
+    },
+    {
+      "id": "5738",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-26T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-26T08:27:38.260Z",
+          "log": "Proposal \"Ade Widyowati\" dibuat oleh sapik."
+        }
+      ],
+      "name": "Ade Widyowati",
+      "submitterName": "sapik",
+      "donorResponse": "kirim saja proposal nya",
+      "disposition": "sedang coba lobi\n",
+      "lastUpdated": "2025-07-26T08:27:38.262Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "c41a",
+      "text": "rapat konsep acara di musola",
+      "start_date": "2025-07-19",
+      "duration": 2,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "3ae3",
+      "text": "pembuatan surat administrasi ",
+      "start_date": "2025-07-20",
+      "duration": 3,
+      "progress": 1,
+      "parent": 0,
+      "userId": "2"
+    },
+    {
+      "id": "5588",
+      "text": "perencanaan konsep lomba",
+      "start_date": "2025-07-19",
+      "duration": 2,
+      "progress": 1,
+      "parent": 0,
+      "userId": "2"
+    },
+    {
+      "id": "7639",
+      "text": "pengajuan struktur panitia",
+      "start_date": "2025-07-21",
+      "duration": 4,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "9ea8",
+      "text": "rancangan anggaran proposal",
+      "start_date": "2025-07-20",
+      "duration": 3,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "bbfd",
+      "text": "persiapan administrasi",
+      "start_date": "2025-07-22",
+      "duration": 7,
+      "progress": 0,
+      "parent": 0
+    },
+    {
+      "id": "d834",
+      "text": "rapat koordinasi pemuda",
+      "start_date": "2025-07-24",
+      "duration": 9,
+      "progress": 0,
+      "parent": 0
+    },
+    {
+      "id": "dc74",
+      "text": "persiapan proposal ",
+      "start_date": "2025-07-31",
+      "duration": 1,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "66c9",
+      "text": "perencanaan struktur panitia",
+      "start_date": "2025-07-28",
+      "duration": 5,
+      "progress": 0.664,
+      "parent": 0
+    }
+  ],
+  "incomes": [
+    {
+      "id": "9dc4",
+      "description": "Kartama Skin Care",
+      "category": "Dana Sponsor",
+      "amount": 500000
+    },
+    {
+      "id": "579d",
+      "description": "CV. Ramindo Karya Mandiri",
+      "category": "Dana Sponsor",
+      "amount": 1000000
+    },
+    {
+      "description": "Pak Ferry Gonaldi",
+      "category": "Donasi",
+      "amount": 200000,
+      "id": "d4a8"
+    },
+    {
+      "id": "fb6e",
+      "description": "Sisa Anggaran Tahun Lalu",
+      "category": "Hibah",
+      "amount": 2765500
+    }
+  ],
+  "expenses": [],
+  "competitions": [
+    {
+      "name": "Mengumpulkan bola Warna",
+      "description": "Anak anak Batita (ORANG)",
+      "id": "65af"
+    },
+    {
+      "name": "Piramid Bola",
+      "description": "anak Balita (ORANG)",
+      "id": "ad61"
+    },
+    {
+      "id": "8907",
+      "name": "Injak Bola",
+      "description": "Anak SMP (ORANG)"
+    },
+    {
+      "id": "fa44",
+      "name": "Tarik Tambang",
+      "description": "Bapak-bapak, Pemuda (TIM)"
+    },
+    {
+      "id": "afb5",
+      "name": "Mengumpulkan Bola Warna Corong",
+      "description": "Ibuk-Ibuk (ORANG)"
+    },
+    {
+      "id": "cbd5",
+      "name": "Domino",
+      "description": "Bapak-bapak, pemuda (TIM)"
+    },
+    {
+      "id": "cda1",
+      "name": "Jemur Kertas",
+      "description": "Anak Balita (ORANG)"
+    }
+  ],
+  "participants": [
+    {
+      "id": "4e40",
+      "name": "kang padel",
+      "contact": "34213121",
+      "competitionIds": [
+        "cbd5"
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "activity-6",
+      "title": "Beli konsumsi untuk panitia",
+      "description": "Beli konsumsi untuk panitia selama acara.",
+      "divisionId": "7",
+      "status": "pending",
+      "createdAt": "2025-07-25T12:00:00.000Z"
+    },
+    {
+      "id": "activity-7",
+      "title": "Persiapan dekorasi panggung",
+      "description": "Siapkan dekorasi untuk panggung utama.",
+      "divisionId": "10",
+      "status": "in-progress",
+      "createdAt": "2025-07-25T13:00:00.000Z"
+    },
+    {
+      "id": "5f7d",
+      "title": "kontak",
+      "description": "kabari : \npak teguh\npak darmanto\npak ali mahfud\npak samsu\nmas ridho \npersikabo mas agung\npt bang bobby pak jumino\nselasar",
+      "divisionId": "2",
+      "status": "inprogress",
+      "createdAt": "2025-07-25T11:49:41.738Z"
+    },
+    {
+      "id": "6692",
+      "title": "buat cap stempel",
+      "description": "untuk surat menyurat",
+      "divisionId": "5",
+      "status": "todo",
+      "createdAt": "2025-07-25T11:50:16.505Z"
+    },
+    {
+      "id": "bea8",
+      "title": "rafi",
+      "description": "list kan semua perlengkapan yang di butuhkan",
+      "divisionId": "6",
+      "status": "inprogress",
+      "createdAt": "2025-07-25T11:50:36.813Z"
+    },
+    {
+      "id": "5ae5",
+      "title": "kabari kak rina",
+      "description": "usaha kakak zidan ",
+      "divisionId": "7",
+      "status": "todo",
+      "createdAt": "2025-07-25T11:52:08.392Z"
+    },
+    {
+      "id": "0214",
+      "title": "PROPOSAL",
+      "description": "kita coba buat proposal sore sabtu ini dengan kak dini",
+      "divisionId": "4",
+      "status": "todo",
+      "createdAt": "2025-07-26T06:52:26.150Z"
+    }
+  ]
+}

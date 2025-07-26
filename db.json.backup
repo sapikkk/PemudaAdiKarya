@@ -1,0 +1,191 @@
+{
+  "divisions": [
+    {
+      "id": "1",
+      "name": "Pelaksana Inti"
+    },
+    {
+      "id": "2",
+      "name": "Divisi Konsumsi"
+    },
+    {
+      "id": "3",
+      "name": "Divisi Lomba"
+    },
+    {
+      "id": "4",
+      "name": "Divisi Perlengkapan"
+    }
+  ],
+  "members": [
+    {
+      "name": "Azid",
+      "divisionId": "2",
+      "id": "a20b"
+    },
+    {
+      "name": "Sulthon",
+      "divisionId": "3",
+      "id": "cb3a"
+    },
+    {
+      "name": "Sapik",
+      "divisionId": "4",
+      "id": "b1d0"
+    },
+    {
+      "name": "Syapiq",
+      "divisionId": "2",
+      "id": "c68c"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "c41a",
+      "text": "rapat konsep acara",
+      "start_date": "2025-07-26",
+      "duration": 1,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "3ae3",
+      "text": "pembuatan surat administrasi ",
+      "start_date": "2025-07-30",
+      "duration": 1,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "5588",
+      "text": "perencanaan konsep lomba",
+      "start_date": "2025-07-29",
+      "duration": 1,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "7639",
+      "text": "pengajuan struktur panitia",
+      "start_date": "2025-07-28",
+      "duration": 1,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "9ea8",
+      "text": "rancangan anggaran proposal",
+      "start_date": "2025-07-27",
+      "duration": 1,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "bbfd",
+      "text": "persiapan administrasi",
+      "start_date": "2025-07-28",
+      "duration": 5,
+      "progress": 0.296,
+      "parent": 0
+    },
+    {
+      "id": "d834",
+      "text": "rapat koordinasi pemuda",
+      "start_date": "2025-07-29",
+      "duration": 1,
+      "progress": 0.61,
+      "parent": 0
+    },
+    {
+      "id": "dc74",
+      "text": "persiapan proposal ",
+      "start_date": "2025-07-31",
+      "duration": 1,
+      "progress": 1,
+      "parent": 0
+    },
+    {
+      "id": "66c9",
+      "text": "perencanaan struktur panitia",
+      "start_date": "2025-07-28",
+      "duration": 5,
+      "progress": 0.664,
+      "parent": 0
+    }
+  ],
+  "incomes": [
+    {
+      "id": "0a6b",
+      "description": "azid donasi gaspol hajar.",
+      "category": "Pendaftaran Lomba",
+      "amount": 10000
+    },
+    {
+      "id": "95e7",
+      "description": "gas",
+      "category": "Donasi",
+      "amount": 100000
+    }
+  ],
+  "expenses": [
+    {
+      "id": "5ce4",
+      "description": "sapik beli rokok",
+      "category": "Akomodasi",
+      "amount": 5000
+    },
+    {
+      "id": "7399",
+      "description": "beli rokok",
+      "category": "Dekorasi",
+      "amount": 10000
+    }
+  ],
+  "competitions": [
+    {
+      "name": "lomba lomba",
+      "description": "ervadcz",
+      "id": "65af"
+    },
+    {
+      "id": "ad61",
+      "name": "Balap Karung",
+      "description": "Balap Karung"
+    },
+    {
+      "id": "33bd",
+      "name": "tarik tambang",
+      "description": ""
+    }
+  ],
+  "participants": [
+    {
+      "name": "Syapiq",
+      "contact": "syapiq@gmail.com",
+      "competitionIds": [
+        null,
+        "2",
+        "ad61",
+        "33bd",
+        "65af"
+      ],
+      "id": "a20b"
+    },
+    {
+      "id": "cb3a",
+      "name": "azid",
+      "contact": "081234567890",
+      "competitionIds": [
+        "ad61"
+      ]
+    },
+    {
+      "id": "b1d0",
+      "name": "sulthon",
+      "contact": "081234567890",
+      "competitionIds": [
+        "65af"
+      ]
+    }
+  ]
+}
