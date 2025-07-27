@@ -37,6 +37,8 @@ export const useAuthStore = defineStore('auth', {
             this.loading = true;
             this.error = null;
             try {
+                console.log('Attempting login with API_URL:', API_URL);
+                
                 // 1. Ambil data user dari API berdasarkan email
                 const response = await fetch(`${API_URL}?email=${credentials.email}`, {
                     method: 'GET',
@@ -45,11 +47,16 @@ export const useAuthStore = defineStore('auth', {
                     },
                 });
                 
+                console.log('Login response status:', response.status);
+                
                 if (!response.ok) {
-                    throw new Error(`Server error: ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('Login response error:', errorText);
+                    throw new Error(`Server error: ${response.status} - ${response.statusText}`);
                 }
                 
                 const users = await response.json();
+                console.log('Users found:', users.length);
 
                 // 2. Cek apakah user ditemukan dan password cocok
                 if (users.length === 0 || users[0].password !== credentials.password) {
@@ -63,7 +70,18 @@ export const useAuthStore = defineStore('auth', {
 
             } catch (error) {
                 console.error('Login error:', error);
-                this.error = error.message || 'Terjadi kesalahan saat login';
+                
+                // Handle specific error types
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    this.error = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+                } else if (error.message.includes('500')) {
+                    this.error = 'Server sedang bermasalah. Silakan coba lagi nanti.';
+                } else if (error.message.includes('404')) {
+                    this.error = 'Service tidak ditemukan. Hubungi administrator.';
+                } else {
+                    this.error = error.message || 'Terjadi kesalahan saat login';
+                }
+                
                 this.user = null;
                 localStorage.removeItem('user');
             } finally {
