@@ -6,20 +6,48 @@ const path = require('path');
 const server = jsonServer.create();
 
 // Mengarahkan router ke file database db.json Anda.
-// path.join(__dirname, '../db.json') secara dinamis membuat path yang benar.
-// __dirname adalah direktori tempat file ini (server.js) berada, yaitu '/api'.
-// '../db.json' berarti "naik satu level direktori, lalu cari db.json".
 const router = jsonServer.router(path.join(__dirname, '../db.json'));
 
-// Menggunakan middleware default dari json-server (seperti logger, cors, dll.)
-const middlewares = jsonServer.defaults();
+// Menggunakan middleware default dari json-server
+const middlewares = jsonServer.defaults({
+  // Konfigurasi CORS untuk mobile compatibility
+  noCors: false
+});
+
+// Custom CORS middleware untuk mengatasi masalah mobile
+server.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Menerapkan middleware ke server
 server.use(middlewares);
 
-// Menerapkan router ke server. Semua request akan ditangani oleh router ini.
+// Middleware untuk logging (debugging)
+server.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+// Menerapkan router ke server
 server.use(router);
 
-// Mengekspor instance server agar bisa diimpor dan digunakan oleh Vercel.
-// Vercel akan mengambil modul ini dan menjalankannya sebagai serverless function.
+// Error handling
+server.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: err.message
+  });
+});
+
+// Mengekspor instance server agar bisa diimpor dan digunakan oleh Vercel
 module.exports = server;
