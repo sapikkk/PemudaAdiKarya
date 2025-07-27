@@ -1,25 +1,83 @@
-// Mengimpor library yang diperlukan
+// api/server.js - Vercel Compatible
 const jsonServer = require('json-server');
 const path = require('path');
 
-// Membuat instance server dari json-server
 const server = jsonServer.create();
-
-// Mengarahkan router ke file database db.json Anda.
-// path.join(__dirname, '../db.json') secara dinamis membuat path yang benar.
-// __dirname adalah direktori tempat file ini (server.js) berada, yaitu '/api'.
-// '../db.json' berarti "naik satu level direktori, lalu cari db.json".
 const router = jsonServer.router(path.join(__dirname, '../db.json'));
+const middlewares = jsonServer.defaults({
+  // Aktifkan CORS untuk semua origin
+  cors: true,
+  // Nonaktifkan static serving jika tidak diperlukan
+  static: false
+});
 
-// Menggunakan middleware default dari json-server (seperti logger, cors, dll.)
-const middlewares = jsonServer.defaults();
+// Custom CORS middleware untuk mobile compatibility
+server.use((req, res, next) => {
+  // Set CORS headers untuk mobile browser
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
-// Menerapkan middleware ke server
+// Middleware untuk mobile user agent detection dan optimization
+server.use((req, res, next) => {
+  const userAgent = req.get('User-Agent') || '';
+  const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+  
+  if (isMobile) {
+    // Set cache headers untuk mobile
+    res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+  }
+  
+  next();
+});
+
+// Health check endpoint
+server.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Middleware default
 server.use(middlewares);
 
-// Menerapkan router ke server. Semua request akan ditangani oleh router ini.
-server.use(router);
+// Custom middleware untuk handling JSON dengan error catching
+server.use(jsonServer.bodyParser);
 
-// Mengekspor instance server agar bisa diimpor dan digunakan oleh Vercel.
-// Vercel akan mengambil modul ini dan menjalankannya sebagai serverless function.
+// Error handling middleware
+server.use((err, req, res, next) => {
+  console.error('Server Error:', err);
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: err.message 
+  });
+});
+
+// Router dengan prefix /api
+server.use('/api', router);
+
+// Fallback untuk root path
+server.get('/', (req, res) => {
+  res.json({ 
+    message: 'JSON Server is running',
+    endpoints: {
+      health: '/api/health',
+      data: '/api/*'
+    }
+  });
+});
+
 module.exports = server;
