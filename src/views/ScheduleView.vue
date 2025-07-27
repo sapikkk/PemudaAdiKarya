@@ -1154,57 +1154,72 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
 }
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--surface-border);
-  flex-shrink: 0;
-  gap: 1rem;
-  flex-wrap: wrap;
-  position: relative;
-}
-.header-content-table {
-  flex-grow: 1;
-}
-.header-content-table h2 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-color);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.content-summary {
-  font-size: 0.875rem;
-  color: var(--text-color-secondary);
-  font-weight: 500;
-}
 .header-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-shrink: 0;
-  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%; /* Prevent overflow dari parent */
+  overflow: hidden; /* Hide overflow pada container */
 }
+
 .filter-grid {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
   align-items: center;
+  overflow-x: auto; /* Enable horizontal scroll */
+  overflow-y: visible;
+  padding: 0.5rem 0;
+  margin: -0.5rem 0;
+  min-width: 0;
+  flex-shrink: 1;
+  max-width: 100%; /* Prevent overflow */
+  width: 100%; /* Full width utilization */
+  
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+  
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 transparent;
 }
+
+.filter-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.filter-grid::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.filter-grid::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.filter-grid::-webkit-scrollbar-thumb:hover {
+  background-color: #a0aec0;
+}
+
 .filter-group {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0; /* Prevent shrinking of individual filter groups */
+  white-space: nowrap; /* Prevent text wrapping */
 }
+
 .filter-group label {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-color-secondary);
+  flex-shrink: 0; /* Prevent label shrinking */
 }
+
 .filter-select,
 .filter-date {
   padding: 0.5rem 1rem;
@@ -1215,15 +1230,22 @@ onUnmounted(() => {
   font-size: 0.875rem;
   font-weight: 500;
   transition: border-color 0.2s;
+  flex-shrink: 0; /* Prevent input shrinking */
 }
+
 .filter-select:focus,
 .filter-date:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
+
 .filter-select {
   min-width: 150px;
+}
+
+.filter-date {
+  min-width: 140px;
 }
 .gantt-wrapper {
   flex-grow: 1;
