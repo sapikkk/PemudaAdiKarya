@@ -1,15 +1,10 @@
 import { defineStore } from 'pinia';
 import { useRouter } from 'vue-router';
 
-// API URL yang dinamis berdasarkan environment
-const getApiUrl = () => {
-  // Prioritas: environment variable -> production check -> fallback
-  const baseUrl = import.meta.env.VITE_API_URL || 
-                  (import.meta.env.PROD ? '/api' : 'http://localhost:3001');
-  return `${baseUrl}/users`;
-};
-
-const API_URL = getApiUrl();
+// API URL yang sederhana
+const API_URL = import.meta.env.PROD 
+    ? '/api/users'  // Production
+    : 'http://localhost:3001/users';  // Development
 
 export const useAuthStore = defineStore('auth', {
     // --------------------------------------------------
