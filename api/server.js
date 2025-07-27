@@ -8,8 +8,7 @@ const server = jsonServer.create();
 
 // Solusi 1: Embed data langsung dalam kode (Rekomendasi untuk Vercel)
 const dbData = {
-  // Ganti dengan data dari db.json Anda
-{
+
   "users": [
     {
       "id": "1",
@@ -726,7 +725,6 @@ const dbData = {
       "createdAt": "2025-07-26T06:52:26.150Z"
     }
   ]
-}
 };
 
 // Solusi 2: Baca file db.json secara sinkron (alternatif)
