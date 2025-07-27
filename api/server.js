@@ -17,6 +17,18 @@ const middlewares = jsonServer.defaults();
 // Menerapkan middleware ke server
 server.use(middlewares);
 
+// Di server.js, tambahkan konfigurasi CORS yang lebih spesifik
+server.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 // Menerapkan router ke server. Semua request akan ditangani oleh router ini.
 server.use(router);
 
