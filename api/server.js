@@ -726,46 +726,197 @@ const dbData = {
     }
   ]
 };
-
-// Solusi 2: Baca file db.json secara sinkron (alternatif)
-let router;
-try {
-  // Coba baca dari root directory
-  const dbPath = path.join(process.cwd(), 'db.json');
-  if (fs.existsSync(dbPath)) {
-    router = jsonServer.router(dbPath);
-  } else {
-    // Jika tidak ada, gunakan data yang di-embed
-    router = jsonServer.router(dbData);
+function loadData() {
+  try {
+    // Coba baca dari berbagai lokasi
+    const possiblePaths = [
+      path.join(process.cwd(), 'db.json'),
+      path.join(__dirname, '../db.json'),
+      path.join(__dirname, 'db.json')
+    ];
+    
+    for (const dbPath of possiblePaths) {
+      if (fs.existsSync(dbPath)) {
+        console.log(`Database found at: ${dbPath}`);
+        const data = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+        return data;
+      }
+    }
+    
+    console.log('Using default data');
+    return defaultData;
+  } catch (error) {
+    console.error('Error loading data:', error);
+    return defaultData;
   }
-} catch (error) {
-  console.log('Menggunakan data embedded karena db.json tidak ditemukan');
-  router = jsonServer.router(dbData);
 }
 
-// Menggunakan middleware default dari json-server
-const middlewares = jsonServer.defaults({
-  // Disable static file serving untuk Vercel
-  static: false
-});
+// Load data dan buat router
+const data = loadData();
+const router = jsonServer.router(data);
 
-// Menerapkan middleware ke server
-server.use(middlewares);
-
-// Custom middleware untuk CORS (opsional, jika diperlukan)
+// Middleware CORS yang lebih permisif
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
   if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
+    res.status(200).end();
+    return;
+  }
+  next();
+});
+
+// Middleware untuk parsing JSON
+server.use(jsonServer.bodyParser);
+
+// Custom endpoint untuk login
+server.post('/api/login', (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+    
+    if (!username && !email) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Username atau email diperlukan' 
+      });
+    }
+    
+    if (!password) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Password diperlukan' 
+      });
+    }
+
+    // Cari user berdasarkan username atau email
+    const users = data.users || [];
+    const user = users.find(u => 
+      (u.username === username || u.email === email) && u.password === password
+    );
+
+    if (user) {
+      // Jangan kirim password dalam response
+      const { password: _, ...userWithoutPassword } = user;
+      
+      res.status(200).json({
+        success: true,
+        message: 'Login berhasil',
+        user: userWithoutPassword,
+        token: `fake-jwt-token-${user.id}` // Untuk development
+      });
+    } else {
+      res.status(401).json({
+        success: false,
+        message: 'Username/email atau password salah'
+      });
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
   }
 });
 
-// Menerapkan router ke server
-server.use('/api', router); // Tambahkan prefix /api untuk Vercel
+// Custom endpoint untuk register
+server.post('/api/register', (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username, email, dan password diperlukan'
+      });
+    }
+
+    const users = data.users || [];
+    
+    // Cek apakah user sudah ada
+    const existingUser = users.find(u => u.username === username || u.email === email);
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'Username atau email sudah digunakan'
+      });
+    }
+
+    // Buat user baru
+    const newUser = {
+      id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+      username,
+      email,
+      password,
+      role: 'user'
+    };
+
+    users.push(newUser);
+    
+    const { password: _, ...userWithoutPassword } = newUser;
+    
+    res.status(201).json({
+      success: true,
+      message: 'Registrasi berhasil',
+      user: userWithoutPassword
+    });
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan server'
+    });
+  }
+});
+
+// Health check endpoint
+server.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    data: {
+      users: data.users?.length || 0,
+      endpoints: ['/api/users', '/api/login', '/api/register', '/api/health']
+    }
+  });
+});
+
+// Middleware default dari json-server (tanpa static files)
+const middlewares = jsonServer.defaults({
+  static: false,
+  noCors: true
+});
+
+server.use(middlewares);
+
+// Router untuk semua endpoint JSON Server dengan prefix /api
+server.use('/api', router);
+
+// Fallback untuk root path
+server.get('/', (req, res) => {
+  res.json({
+    message: 'JSON Server is running on Vercel',
+    endpoints: {
+      health: '/api/health',
+      login: '/api/login',
+      register: '/api/register',
+      users: '/api/users'
+    }
+  });
+});
+
+// Error handler
+server.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({
+    success: false,
+    message: 'Internal server error'
+  });
+});
 
 // Export untuk Vercel
 module.exports = server;
