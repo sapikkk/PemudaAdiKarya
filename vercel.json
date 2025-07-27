@@ -3,10 +3,7 @@
   "builds": [
     {
       "src": "api/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxLambdaSize": "10mb"
-      }
+      "use": "@vercel/node"
     },
     {
       "src": "package.json",
@@ -16,19 +13,14 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/server.js"
+      "source": "/api/(.*)",
+      "destination": "/api/server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "functions": {
-    "api/server.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
