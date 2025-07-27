@@ -9,4 +9,9 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  base: '/', // Pastikan ini sesuai dengan deployment
+  server: {
+    host: true, // Penting untuk akses mobile
+    port: 3000
+  }
 })
