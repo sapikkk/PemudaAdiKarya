@@ -5,66 +5,21 @@ const path = require('path');
 // Membuat instance server dari json-server
 const server = jsonServer.create();
 
-// Mengarahkan router ke file database db.json
+// Mengarahkan router ke file database db.json Anda.
+// path.join(__dirname, '../db.json') secara dinamis membuat path yang benar.
+// __dirname adalah direktori tempat file ini (server.js) berada, yaitu '/api'.
+// '../db.json' berarti "naik satu level direktori, lalu cari db.json".
 const router = jsonServer.router(path.join(__dirname, '../db.json'));
 
-// Menggunakan middleware default dari json-server
-const middlewares = jsonServer.defaults({
-    // PERBAIKAN: Konfigurasi CORS untuk mobile
-    static: './public',
-    noCors: false
-});
-
-// PERBAIKAN: Custom CORS middleware untuk mobile compatibility
-server.use((req, res, next) => {
-    // Izinkan semua origin untuk development
-    // Untuk production, ganti '*' dengan domain spesifik Anda
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma');
-    
-    // Handle preflight requests
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
-});
-
-// PERBAIKAN: Logging middleware untuk debugging mobile issues
-server.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-    console.log('User-Agent:', req.get('User-Agent'));
-    next();
-});
+// Menggunakan middleware default dari json-server (seperti logger, cors, dll.)
+const middlewares = jsonServer.defaults();
 
 // Menerapkan middleware ke server
 server.use(middlewares);
 
-// PERBAIKAN: Custom routes untuk better error handling
-server.use(jsonServer.bodyParser);
-
-// Custom middleware untuk menangani errors
-server.use((err, req, res, next) => {
-    console.error('Server error:', err);
-    res.status(500).json({ 
-        error: 'Internal server error',
-        message: err.message 
-    });
-});
-
-// Menerapkan router ke server
+// Menerapkan router ke server. Semua request akan ditangani oleh router ini.
 server.use(router);
 
-// PERBAIKAN: Error handling untuk mobile
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-});
-
-// Mengekspor instance server agar bisa diimpor dan digunakan oleh Vercel
+// Mengekspor instance server agar bisa diimpor dan digunakan oleh Vercel.
+// Vercel akan mengambil modul ini dan menjalankannya sebagai serverless function.
 module.exports = server;
