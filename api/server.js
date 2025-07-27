@@ -1,7 +1,12 @@
-// Mengimpor library yang diperlukan
-const jsonServer = require('json-server');
-const path = require('path');
-const fs = require('fs');
+// Mengimpor library yang diperlukan (ES Module syntax)
+import jsonServer from 'json-server';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// Mendapatkan __dirname equivalent untuk ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Membuat instance server dari json-server
 const server = jsonServer.create();
@@ -116,5 +121,5 @@ server.use((err, req, res, next) => {
   });
 });
 
-// Mengekspor instance server
-module.exports = server;
+// Mengekspor instance server (ES Module syntax)
+export default server;
