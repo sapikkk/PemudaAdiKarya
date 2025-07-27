@@ -399,22 +399,23 @@ const deleteConfirmed = async () => {
   padding: 0 1.5rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  color: var(--text-primary);
 }
 
 .page-header {
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header-content h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #1a202c;
+  color: var(--text-primary);
 }
 
 .header-content p {
-  color: #718096;
+  color: var(--text-secondary);
   font-size: 1rem;
   margin-top: 0.25rem;
 }
@@ -434,14 +435,15 @@ const deleteConfirmed = async () => {
 
 .filter-container label {
   font-weight: 500;
-  color: #4a5568;
+  color: var(--text-secondary);
 }
 
 .division-select {
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  border: 1px solid #cbd5e0;
-  background-color: #fff;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .btn {
@@ -466,12 +468,12 @@ const deleteConfirmed = async () => {
 }
 
 .btn-secondary {
-  background-color: #f1f5f9;
-  color: #4a5568;
-  border-color: #cbd5e0;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
 }
 .btn-secondary:hover {
-  background-color: #e2e8f0;
+  background-color: var(--bg-hover);
 }
 
 .btn-danger {
@@ -485,13 +487,13 @@ const deleteConfirmed = async () => {
 .state-feedback {
   text-align: center;
   padding: 3rem;
-  background-color: #f7fafc;
+  background-color: var(--bg-state);
   border-radius: 8px;
-  color: #718096;
+  color: var(--text-secondary);
 }
 .state-feedback.error {
-  background-color: #fef2f2;
-  color: #b91c1c;
+  background-color: var(--bg-error);
+  color: var(--text-error);
 }
 
 .kanban-board {
@@ -502,7 +504,7 @@ const deleteConfirmed = async () => {
 }
 
 .kanban-column {
-  background-color: #f1f5f9;
+  background-color: var(--bg-expand);
   border-radius: 8px;
   padding: 1rem;
   min-height: 300px;
@@ -541,16 +543,16 @@ const deleteConfirmed = async () => {
 
 .empty-column {
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding: 2rem 1rem;
   font-size: 0.9rem;
 }
 
 .kanban-card {
-  background-color: #fff;
+  background-color: var(--bg-primary);
   border-radius: 6px;
   padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   border-left: 4px solid #6366f1;
 }
 
@@ -585,7 +587,7 @@ const deleteConfirmed = async () => {
 .btn-icon {
   background: none;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 0.25rem;
   border-radius: 50%;
@@ -593,20 +595,20 @@ const deleteConfirmed = async () => {
   height: 28px;
 }
 .btn-icon:hover {
-  background-color: #f1f5f9;
-  color: #1e293b;
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .card-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
 
 .card-description {
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--text-secondary);
   line-height: 1.5;
   margin: 0 0 1rem 0;
 }
@@ -615,9 +617,9 @@ const deleteConfirmed = async () => {
   width: 100%;
   padding: 0.5rem;
   border-radius: 4px;
-  border: 1px solid #e2e8f0;
-  background-color: #f8fafc;
-  color: #475569;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -627,8 +629,8 @@ const deleteConfirmed = async () => {
   gap: 0.5rem;
 }
 .btn-move:hover {
-  background-color: #e2e8f0;
-  border-color: #cbd5e0;
+  background-color: var(--bg-hover);
+  border-color: var(--border-color);
 }
 
 .done-card {
@@ -636,29 +638,58 @@ const deleteConfirmed = async () => {
 }
 .done-card .card-title {
   text-decoration: line-through;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
-
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(221, 221, 221, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
-.modal-content {
-  background-color: white;
+
+/* MODAL CONTENT - SUPER HIGH SPECIFICITY */
+.page-container .modal-overlay .modal-content {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0 !important;
+  animation: modalAppear 0.3s ease-out;
+  position: relative;
+  z-index: 1001;
+  color: #1a202c !important;
+}
+
+/* DARK MODE - MAXIMUM SPECIFICITY WITH !important */
+html.dark .page-container .modal-overlay .modal-content,
+html[data-theme="dark"] .page-container .modal-overlay .modal-content,
+body.dark .page-container .modal-overlay .modal-content,
+body[data-theme="dark"] .page-container .modal-overlay .modal-content,
+[data-theme="dark"] .page-container .modal-overlay .modal-content,
+.dark .page-container .modal-overlay .modal-content,
+[data-bs-theme="dark"] .page-container .modal-overlay .modal-content {
+  background: #2d3748 !important;
+  background-color: #2d3748 !important;
+  color: #f7fafc !important;
+  border: 1px solid #4a5568 !important;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
 }
 .modal-content.dialog {
   max-width: 400px;
@@ -667,7 +698,7 @@ const deleteConfirmed = async () => {
 .modal-content h3 {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  color: #1a202c;
+  color: var(--text-primary);
 }
 .form-group {
   margin-bottom: 1.25rem;
@@ -676,17 +707,19 @@ const deleteConfirmed = async () => {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #4a5568;
+  color: var(--text-secondary);
 }
 .form-group input,
 .form-group textarea,
 .form-group select {
   width: 100%;
   padding: 0.6rem 0.8rem;
-  border: 1px solid #cbd5e0;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   box-sizing: border-box;
   font-family: inherit;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 .form-actions {
   display: flex;
@@ -706,5 +739,36 @@ const deleteConfirmed = async () => {
     align-items: stretch;
     gap: 1rem;
   }
+}
+
+/* CSS Variables for Light & Dark Mode */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-hover: #f7fafc;
+  --bg-expand: #f1f5f9;
+  --bg-state: #f7fafc;
+  --bg-error: #fed7d7;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+  --text-muted: #a0aec0;
+  --text-error: #c53030;
+  --border-color: #e2e8f0;
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a202c;
+  --bg-secondary: #2d3748;
+  --bg-hover: #4a5568;
+  --bg-expand: #2d3748;
+  --bg-state: #2d3748;
+  --bg-error: #742a2a;
+  --text-primary: #f7fafc;
+  --text-secondary: #a0aec0;
+  --text-muted: #718096;
+  --text-error: #fc8181;
+  --border-color: #4a5568;
+  --overlay-bg: rgba(0, 0, 0, 0.7);
 }
 </style>

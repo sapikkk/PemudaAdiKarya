@@ -1,36 +1,26 @@
-// src/main.js
-
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 
-// Impor Konfigurasi
 import App from './App.vue';
 import router from './router';
 
-// Impor PrimeVue & Tema Modern
+// PrimeVue and Theme
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import 'primeicons/primeicons.css';
 
-// --- BAGIAN 1: PASTIKAN SEMUA KOMPONEN DI-IMPORT DI SINI ---
-import Chart from 'primevue/chart';
-import Button from 'primevue/button';
-import Toast from 'primevue/toast';
+// Import global dashboard styles
+import './assets/dashboard.css';
+
 import ToastService from 'primevue/toastservice';
-import Card from 'primevue/card';
-import InputText from 'primevue/inputtext';   // <-- Pastikan ini ada
-import Password from 'primevue/password';     // <-- Pastikan ini ada
-import Dialog from 'primevue/dialog';
-import Message from 'primevue/message';       // <-- Pastikan ini ada
-import Divider from 'primevue/divider';       // <-- Pastikan ini ada
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+
 
 const app = createApp(App);
 
-const pinia = createPinia();
-app.use(pinia);
+app.use(createPinia());
 app.use(router);
-
-// Gunakan PrimeVue dengan konfigurasi tema yang benar
 app.use(PrimeVue, {
     theme: {
         preset: Aura,
@@ -41,20 +31,18 @@ app.use(PrimeVue, {
         }
     }
 });
-
-// Register ToastService
 app.use(ToastService);
 
-// --- BAGIAN 2: PASTIKAN SEMUA KOMPONEN DIDAFTARKAN DI SINI ---
-app.component('Chart', Chart);
+// Mendaftarkan komponen PrimeVue yang sering dipakai secara global
+import Button from 'primevue/button';
+import Card from 'primevue/card';
+import Dialog from 'primevue/dialog';
+import Toast from 'primevue/toast';
 app.component('Button', Button);
-app.component('Toast', Toast);
 app.component('Card', Card);
-app.component('InputText', InputText); // <-- Pastikan ini ada
-app.component('Password', Password);   // <-- Pastikan ini ada
 app.component('Dialog', Dialog);
-app.component('Message', Message);     // <-- Pastikan ini ada
-app.component('Divider', Divider);     // <-- Pastikan ini ada
-
+app.component('Toast', Toast);
+app.component('InputText', InputText);
+app.component('Password', Password);
 
 app.mount('#app');

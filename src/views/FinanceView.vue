@@ -6,7 +6,6 @@
         <h1>Manajemen Keuangan</h1>
         <p>Kelola pemasukan dan pengeluaran acara Anda secara terperinci.</p>
       </div>
-      <!-- Error banner akan tetap ada jika store mengembalikan error -->
       <div
         v-if="financeStore.error"
         class="error-banner"
@@ -20,7 +19,6 @@
 
     <!-- Kartu Ringkasan Keuangan -->
     <div class="summary-grid">
-      <!-- Kartu ringkasan tetap sama -->
       <div class="summary-card income-card">
         <div class="card-icon"><i class="pi pi-arrow-down-right"></i></div>
         <div class="card-content">
@@ -64,18 +62,129 @@
       </div>
     </div>
 
-    <!-- Kontainer untuk Tabel Pemasukan dan Pengeluaran -->
+    <!-- [BARU] Visualisasi & Laporan Keuangan -->
+    <div class="finance-details-grid">
+      <!-- [BARU] Grafik Pengeluaran -->
+      <div class="chart-wrapper">
+        <div class="chart-header">
+          <h2><i class="pi pi-chart-pie"></i> Komposisi Pengeluaran</h2>
+          <p>Berdasarkan Kategori</p>
+        </div>
+        <div class="chart-content">
+          <canvas ref="expenseChartCanvas"></canvas>
+          <div v-if="!financeStore.expenses.length" class="chart-empty-state">
+            <i class="pi pi-chart-pie"></i>
+            <p>Grafik akan muncul setelah ada data pengeluaran.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- [BARU] Tabel Laporan Keuangan (Buku Besar) -->
+      <div class="ledger-wrapper">
+        <div class="ledger-header">
+          <div class="ledger-title">
+            <h2><i class="pi pi-book"></i> Laporan Keuangan</h2>
+            <p>Semua transaksi terurut berdasarkan tanggal.</p>
+          </div>
+          <div class="ledger-filter">
+            <select
+              v-model="selectedCategoryFilter"
+              class="category-filter-dropdown"
+            >
+              <option value="">Semua Kategori</option>
+              <optgroup label="Pemasukan">
+                <option
+                  v-for="cat in incomeCategories"
+                  :key="`filter-in-${cat}`"
+                  :value="cat"
+                >
+                  {{ cat }}
+                </option>
+              </optgroup>
+              <optgroup label="Pengeluaran">
+                <option
+                  v-for="cat in expenseCategories"
+                  :key="`filter-out-${cat}`"
+                  :value="cat"
+                >
+                  {{ cat }}
+                </option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+        <div class="ledger-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Deskripsi</th>
+                <th class="text-right">Debit</th>
+                <th class="text-right">Kredit</th>
+                <th class="text-right">Saldo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="!filteredLedger.length">
+                <td colspan="5" class="empty-state">
+                  <div class="empty-content">
+                    <div class="empty-icon"><i class="pi pi-file"></i></div>
+                    <p>Tidak ada transaksi yang cocok dengan filter.</p>
+                  </div>
+                </td>
+              </tr>
+              <tr
+                v-for="entry in filteredLedger"
+                :key="entry.id"
+                class="ledger-row"
+              >
+                <td>{{ formatDate(entry.date) }}</td>
+                <td>
+                  <div class="ledger-description">
+                    {{ entry.description }}
+                    <span
+                      class="ledger-category-tag"
+                      :class="
+                        entry.type === 'income' ? 'income-tag' : 'expense-tag'
+                      "
+                    >
+                      {{ entry.category }}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-right amount-cell debit-amount">
+                  {{
+                    entry.type === "expense"
+                      ? formatCurrency(entry.amount)
+                      : "-"
+                  }}
+                </td>
+                <td class="text-right amount-cell credit-amount">
+                  {{
+                    entry.type === "income" ? formatCurrency(entry.amount) : "-"
+                  }}
+                </td>
+                <td class="text-right amount-cell balance-amount">
+                  {{ formatCurrency(entry.runningBalance) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kontainer untuk Tabel Pemasukan dan Pengeluaran (Tetap Ada) -->
     <div class="tables-container">
       <!-- Tabel Pemasukan -->
       <div class="table-wrapper">
         <div class="table-header">
           <div class="header-content-table">
             <h2><i class="pi pi-chart-line"></i> Pemasukan</h2>
-            <span class="table-summary"
+            <span class="table-summary income-summary"
               >Total: {{ formatCurrency(financeStore.totalIncome) }}</span
             >
           </div>
-          <!-- Tombol Tambah hanya untuk Admin -->
           <button
             v-if="authStore.isAdmin"
             @click="openModal('income')"
@@ -93,26 +202,19 @@
           <table v-else>
             <thead>
               <tr>
+                <th>Tanggal</th>
                 <th>Deskripsi</th>
                 <th>Kategori</th>
                 <th class="text-right">Jumlah</th>
-                <!-- Kolom Aksi hanya untuk Admin -->
                 <th v-if="authStore.isAdmin" class="text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="!financeStore.incomes.length">
-                <td :colspan="authStore.isAdmin ? 4 : 3" class="empty-state">
+                <td :colspan="authStore.isAdmin ? 5 : 4" class="empty-state">
                   <div class="empty-content">
                     <div class="empty-icon"><i class="pi pi-inbox"></i></div>
                     <p>Belum ada data pemasukan.</p>
-                    <button
-                      v-if="authStore.isAdmin"
-                      @click="openModal('income')"
-                      class="btn btn-income btn-sm"
-                    >
-                      Tambah Pemasukan Pertama
-                    </button>
                   </div>
                 </td>
               </tr>
@@ -121,6 +223,7 @@
                 :key="item.id"
                 class="data-row"
               >
+                <td>{{ formatDate(item.date) }}</td>
                 <td>
                   <div class="cell-content">
                     <span class="description">{{ item.description }}</span>
@@ -132,7 +235,6 @@
                 <td class="text-right amount-cell">
                   {{ formatCurrency(item.amount) }}
                 </td>
-                <!-- Tombol Aksi hanya untuk Admin -->
                 <td v-if="authStore.isAdmin" class="actions">
                   <button
                     @click="openModal('income', item)"
@@ -160,11 +262,10 @@
         <div class="table-header">
           <div class="header-content-table">
             <h2><i class="pi pi-chart-bar"></i> Pengeluaran</h2>
-            <span class="table-summary"
+            <span class="table-summary expense-summary"
               >Total: {{ formatCurrency(financeStore.totalExpense) }}</span
             >
           </div>
-          <!-- Tombol Tambah hanya untuk Admin -->
           <button
             v-if="authStore.isAdmin"
             @click="openModal('expense')"
@@ -182,28 +283,21 @@
           <table v-else>
             <thead>
               <tr>
+                <th>Tanggal</th>
                 <th>Deskripsi</th>
                 <th>Kategori</th>
                 <th class="text-right">Jumlah</th>
-                <!-- Kolom Aksi hanya untuk Admin -->
                 <th v-if="authStore.isAdmin" class="text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="!financeStore.expenses.length">
-                <td :colspan="authStore.isAdmin ? 4 : 3" class="empty-state">
+                <td :colspan="authStore.isAdmin ? 5 : 4" class="empty-state">
                   <div class="empty-content">
                     <div class="empty-icon">
                       <i class="pi pi-shopping-cart"></i>
                     </div>
                     <p>Belum ada data pengeluaran.</p>
-                    <button
-                      v-if="authStore.isAdmin"
-                      @click="openModal('expense')"
-                      class="btn btn-expense btn-sm"
-                    >
-                      Tambah Pengeluaran Pertama
-                    </button>
                   </div>
                 </td>
               </tr>
@@ -212,6 +306,7 @@
                 :key="item.id"
                 class="data-row"
               >
+                <td>{{ formatDate(item.date) }}</td>
                 <td>
                   <div class="cell-content">
                     <span class="description">{{ item.description }}</span>
@@ -223,7 +318,6 @@
                 <td class="text-right amount-cell">
                   {{ formatCurrency(item.amount) }}
                 </td>
-                <!-- Tombol Aksi hanya untuk Admin -->
                 <td v-if="authStore.isAdmin" class="actions">
                   <button
                     @click="openModal('expense', item)"
@@ -249,13 +343,23 @@
 
     <!-- Modal untuk Tambah/Edit Transaksi -->
     <div v-if="isModalVisible" class="modal-overlay" @click.self="closeModal">
-      <!-- Konten modal tidak berubah -->
       <div class="modal-content">
         <div class="modal-header">
           <h2>{{ formTitle }}</h2>
           <button @click="closeModal" class="btn-close">×</button>
         </div>
         <form @submit.prevent="saveTransaction" class="transaction-form">
+          <div class="form-group">
+            <label for="date"
+              ><i class="pi pi-calendar"></i> Tanggal Transaksi</label
+            >
+            <input
+              id="date"
+              type="date"
+              v-model="editableTransaction.date"
+              required
+            />
+          </div>
           <div class="form-group">
             <label for="description"
               ><i class="pi pi-file-edit"></i> Deskripsi Transaksi</label
@@ -276,7 +380,6 @@
             >
             <div class="amount-input-wrapper">
               <span class="currency-prefix">Rp</span>
-              <!-- [DIPERBAIKI] Atribut 'step' dihapus untuk memungkinkan input angka bebas -->
               <input
                 id="amount"
                 type="number"
@@ -351,9 +454,12 @@
             <p>Apakah Anda yakin ingin menghapus data ini secara permanen?</p>
           </div>
         </div>
-
         <div class="dialog-body-new">
           <div class="dialog-transaction-details">
+            <div class="dialog-detail-item">
+              <strong>Tanggal:</strong>
+              <span>{{ formatDate(editableTransaction.date) }}</span>
+            </div>
             <div class="dialog-detail-item">
               <strong>Deskripsi:</strong>
               <span>{{ editableTransaction.description }}</span>
@@ -373,7 +479,6 @@
             <strong>Peringatan:</strong> Tindakan ini tidak dapat dibatalkan.
           </div>
         </div>
-
         <div class="dialog-actions-new">
           <button @click="closeConfirmDialog" class="btn btn-secondary">
             Batal
@@ -393,10 +498,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, reactive } from "vue";
+import { ref, onMounted, computed, reactive, watch, nextTick } from "vue";
 import { useFinanceStore } from "../stores/financeStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "primevue/usetoast";
+import Chart from "chart.js/auto";
 
 const financeStore = useFinanceStore();
 const authStore = useAuthStore();
@@ -409,11 +515,27 @@ const isSubmitting = ref(false);
 const isDeleting = ref(false);
 const transactionType = ref("income");
 
+// [BARU] Ref untuk canvas chart dan instance chart
+const expenseChartCanvas = ref(null);
+let expenseChart = null;
+
+// [BARU] Ref untuk filter kategori di laporan
+const selectedCategoryFilter = ref("");
+
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const getInitialFormState = () => ({
   id: null,
   description: "",
   amount: 0,
   category: "",
+  date: getTodayDate(), // [DIUBAH] Menambahkan tanggal
 });
 
 let editableTransaction = reactive(getInitialFormState());
@@ -454,12 +576,129 @@ const isFormValid = computed(() => {
     editableTransaction.description.trim() &&
     editableTransaction.amount > 0 &&
     editableTransaction.category &&
+    editableTransaction.date && // [DIUBAH] Validasi tanggal
     !isSubmitting.value
   );
 });
 
 onMounted(async () => {
   await financeStore.fetchAll();
+  // [BARU] Render chart setelah data dimuat
+  await nextTick();
+  renderExpenseChart();
+});
+
+// [BARU] Computed property untuk data chart
+const expenseChartData = computed(() => {
+  const dataByCategory = financeStore.expenses.reduce((acc, expense) => {
+    if (!acc[expense.category]) {
+      acc[expense.category] = 0;
+    }
+    acc[expense.category] += expense.amount;
+    return acc;
+  }, {});
+
+  const labels = Object.keys(dataByCategory);
+  const data = Object.values(dataByCategory);
+
+  // Warna yang lebih menarik untuk chart
+  const backgroundColors = [
+    "#FF6384",
+    "#36A2EB",
+    "#FFCE56",
+    "#4BC0C0",
+    "#9966FF",
+    "#FF9F40",
+    "#E7E9ED",
+    "#8A2BE2",
+    "#7FFF00",
+    "#D2691E",
+  ];
+
+  return {
+    labels,
+    datasets: [
+      {
+        data,
+        backgroundColor: backgroundColors.slice(0, labels.length),
+        hoverOffset: 4,
+      },
+    ],
+  };
+});
+
+// [BARU] Fungsi untuk merender atau update chart
+const renderExpenseChart = () => {
+  if (expenseChartCanvas.value) {
+    if (expenseChart) {
+      expenseChart.destroy();
+    }
+    if (financeStore.expenses.length > 0) {
+      const ctx = expenseChartCanvas.value.getContext("2d");
+      expenseChart = new Chart(ctx, {
+        type: "pie",
+        data: expenseChartData.value,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                padding: 20,
+                font: {
+                  family: "'Inter', sans-serif",
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  }
+};
+
+// [BARU] Watcher untuk memperbarui chart saat data berubah
+watch(
+  () => financeStore.expenses,
+  () => {
+    renderExpenseChart();
+  },
+  { deep: true }
+);
+
+// [BARU] Computed property untuk Laporan Keuangan (Buku Besar)
+const financialLedger = computed(() => {
+  const combined = [
+    ...financeStore.incomes.map((item) => ({ ...item, type: "income" })),
+    ...financeStore.expenses.map((item) => ({ ...item, type: "expense" })),
+  ];
+
+  combined.sort(
+    (a, b) =>
+      new Date(a.date) - new Date(b.date) ||
+      (a.createdAt > b.createdAt ? 1 : -1)
+  );
+
+  let runningBalance = 0;
+  return combined.map((item) => {
+    if (item.type === "income") {
+      runningBalance += item.amount;
+    } else {
+      runningBalance -= item.amount;
+    }
+    return { ...item, runningBalance };
+  });
+});
+
+// [BARU] Computed property untuk memfilter laporan
+const filteredLedger = computed(() => {
+  if (!selectedCategoryFilter.value) {
+    return financialLedger.value;
+  }
+  return financialLedger.value.filter(
+    (entry) => entry.category === selectedCategoryFilter.value
+  );
 });
 
 const formatCurrency = (value) => {
@@ -469,6 +708,13 @@ const formatCurrency = (value) => {
     currency: "IDR",
     minimumFractionDigits: 0,
   }).format(value);
+};
+
+// [BARU] Fungsi untuk format tanggal
+const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  return new Date(dateString).toLocaleDateString("id-ID", options);
 };
 
 const resetForm = () => {
@@ -503,6 +749,7 @@ const saveTransaction = async () => {
       description: editableTransaction.description.trim(),
       category: editableTransaction.category.trim(),
       amount: Number(editableTransaction.amount),
+      date: editableTransaction.date, // [DIUBAH] Menyimpan tanggal
     };
     let success = false;
     if (isEditing.value) {
@@ -598,7 +845,7 @@ const deleteConfirmed = async () => {
 </script>
 
 <style scoped>
-/* [DIPERBAIKI] Menggunakan variabel tema Aura dari PrimeVue */
+/* [PERBAIKAN UTAMA] Menggunakan variabel tema Aura dari PrimeVue */
 .page-container {
   max-width: 1400px;
   margin: 1.5rem auto;
@@ -665,10 +912,10 @@ const deleteConfirmed = async () => {
   margin-bottom: 2.5rem;
 }
 .summary-card {
-  background: var(--p-surface-card);
+  background: var(--p-surface-card); /* DINAMIS */
   padding: 1.5rem;
   border-radius: 16px;
-  border: 1px solid var(--p-surface-border);
+  border: 1px solid var(--p-surface-border); /* DINAMIS */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   display: flex;
@@ -707,10 +954,10 @@ const deleteConfirmed = async () => {
   flex: 1;
 }
 .card-content h3 {
+  color: var(--p-text-muted-color); /* DINAMIS */
   margin: 0 0 0.25rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--p-text-muted-color);
 }
 .card-content p {
   margin: 0 0 0.5rem 0;
@@ -725,7 +972,7 @@ const deleteConfirmed = async () => {
   color: var(--p-red-500);
 }
 .balance-text {
-  color: var(--p-text-color);
+  color: var(--p-text-color); /* DINAMIS */
 }
 .balance-text.negative {
   color: var(--p-red-500);
@@ -740,26 +987,33 @@ const deleteConfirmed = async () => {
   color: var(--p-red-500);
   font-weight: 600;
 }
-.tables-container {
+
+/* [BARU] Grid untuk Chart dan Laporan */
+.finance-details-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   gap: 2rem;
+  margin-bottom: 2.5rem;
 }
-.table-wrapper {
+
+/* [BARU] Styling untuk Chart Wrapper */
+.chart-wrapper,
+.ledger-wrapper {
   background: var(--p-surface-card);
   border: 1px solid var(--p-surface-border);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-.table-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+}
+.chart-header,
+.ledger-header {
   padding: 1.5rem;
   border-bottom: 1px solid var(--p-surface-border);
 }
-.header-content-table h2 {
+.chart-header h2,
+.ledger-title h2 {
   margin: 0 0 0.25rem 0;
   font-size: 1.25rem;
   font-weight: 600;
@@ -768,17 +1022,154 @@ const deleteConfirmed = async () => {
   align-items: center;
   gap: 0.75rem;
 }
+.chart-header p,
+.ledger-title p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--p-text-muted-color);
+}
+.chart-content {
+  position: relative;
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+.chart-empty-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--p-text-muted-color);
+  text-align: center;
+}
+.chart-empty-state i {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+.chart-empty-state p {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
 
-.table {
+/* [BARU] Styling untuk Laporan Keuangan (Ledger) */
+.ledger-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.category-filter-dropdown {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--p-surface-border);
+  background-color: var(--p-surface-ground);
+  color: var(--p-text-color);
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.ledger-table-container {
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: 400px; /* Atur tinggi maksimal */
+}
+.ledger-table-container table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
 }
+.ledger-row:hover {
+  background-color: var(--p-surface-ground);
+}
+.ledger-description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.ledger-category-tag {
+  font-size: 0.7rem;
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+}
+.debit-amount {
+  color: var(--p-red-500);
+}
+.credit-amount {
+  color: var(--p-green-500);
+}
+.balance-amount {
+  font-weight: 600;
+}
+
+.tables-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+.table-wrapper {
+  background: var(--p-surface-card); /* DINAMIS */
+  border: 1px solid var(--p-surface-border); /* DINAMIS */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.table-header {
+  background: var(--p-surface-ground); /* DINAMIS */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--p-surface-border); /* DINAMIS */
+}
+.header-content-table h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--p-text-color); /* DINAMIS */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .table-summary {
   font-size: 0.875rem;
-  color: var(--p-text-muted-color);
-  font-weight: 500;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  display: inline-block;
+  transition: all 0.3s ease;
 }
+
+.income-summary {
+  color: var(--p-primary-700);
+  background-color: var(--p-primary-100);
+  border: 1px solid var(--p-primary-200);
+}
+
+.expense-summary {
+  color: var(--p-red-700);
+  background-color: var(--p-red-100);
+  border: 1px solid var(--p-red-200);
+}
+
+.dark .income-summary {
+  color: var(--p-primary-200);
+  background-color: color-mix(in srgb, var(--p-primary-700) 25%, transparent);
+  border: 1px solid var(--p-primary-700);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--p-primary-500) 50%, transparent);
+}
+
+.dark .expense-summary {
+  color: var(--p-red-200);
+  background-color: color-mix(in srgb, var(--p-red-700) 25%, transparent);
+  border: 1px solid var(--p-red-700);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--p-red-500) 50%, transparent);
+}
+
 .table-content {
   min-height: 250px;
   overflow-x: auto;
@@ -791,14 +1182,14 @@ const deleteConfirmed = async () => {
   align-items: center;
   justify-content: center;
   padding: 3rem;
-  color: var(--p-text-muted-color);
+  color: var(--p-text-muted-color); /* DINAMIS */
   height: 100%;
 }
 .spinner {
   width: 32px;
   height: 32px;
-  border: 4px solid var(--p-surface-100);
-  border-top: 4px solid var(--p-primary-color);
+  border: 4px solid var(--p-surface-100); /* DINAMIS */
+  border-top: 4px solid var(--p-primary-color); /* DINAMIS */
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -816,15 +1207,15 @@ th,
 td {
   padding: 1rem 1.5rem;
   text-align: left;
-  border-bottom: 1px solid var(--p-surface-border);
+  border-bottom: 1px solid var(--p-surface-border); /* DINAMIS */
   vertical-align: middle;
 }
 th {
-  background: var(--p-surface-ground);
+  background: var(--p-surface-ground); /* DINAMIS */
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--p-text-muted-color);
+  color: var(--p-text-muted-color); /* DINAMIS */
   letter-spacing: 0.05em;
 }
 td {
@@ -834,11 +1225,11 @@ td {
   transition: background-color 0.2s ease;
 }
 .data-row:hover {
-  background-color: var(--p-surface-ground);
+  background-color: var(--p-surface-ground); /* DINAMIS */
 }
 .description {
   font-weight: 500;
-  color: var(--p-text-color);
+  color: var(--p-text-color); /* DINAMIS */
 }
 .amount-cell {
   font-weight: 600;
@@ -860,7 +1251,7 @@ td {
   font-size: 3rem;
   margin-bottom: 1rem;
   opacity: 0.5;
-  color: #9ca3af;
+  color: var(--p-text-muted-color); /* DINAMIS */
 }
 .empty-content p {
   margin: 0 0 1.5rem 0;
@@ -897,7 +1288,7 @@ td {
 .btn-income {
   background: var(--p-green-500);
 }
-.btn-income:hover:not {
+.btn-income:hover:not(:disabled) {
   background: var(--p-green-600);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
@@ -911,12 +1302,12 @@ td {
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 .btn-secondary {
-  background-color: var(--p-surface-100);
-  color: var(--p-text-color);
-  border: 1px solid var(--p-surface-border);
+  background-color: var(--p-surface-100); /* DINAMIS */
+  color: var(--p-text-color); /* DINAMIS */
+  border: 1px solid var(--p-surface-border); /* DINAMIS */
 }
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--p-surface-200);
+  background-color: var(--p-surface-200); /* DINAMIS */
 }
 .btn-danger {
   background-color: var(--p-red-500);
@@ -942,43 +1333,70 @@ td {
   align-items: center;
 }
 .income-tag {
-  background-color: var(--p-green-100);
-  color: var(--p-green-700);
+  background-color: var(--p-green-100); /* DINAMIS */
+  color: var(--p-green-700); /* DINAMIS */
 }
 .expense-tag {
-  background-color: var(--p-red-100);
-  color: var(--p-red-700);
+  background-color: var(--p-red-100); /* DINAMIS */
+  color: var(--p-red-700); /* DINAMIS */
 }
 .actions {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
 }
+/* MODAL STYLES - AGGRESSIVE DARK MODE FIX */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(5px);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.modal-content {
-  background: white;
+/* MODAL CONTENT - SUPER HIGH SPECIFICITY */
+.page-container .modal-overlay .modal-content {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
   padding: 0;
-  border-radius: 16px;
+  border-radius: 12px;
   width: 90%;
-  max-width: 550px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  animation: slideIn 0.3s ease;
-  overflow: hidden;
+  max-width: 500px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0 !important;
+  animation: modalAppear 0.3s ease-out;
+  position: relative;
+  z-index: 1001;
+  color: #1a202c !important;
 }
 
+/* DARK MODE - MAXIMUM SPECIFICITY WITH !important */
+html.dark .page-container .modal-overlay .modal-content,
+html[data-theme="dark"] .page-container .modal-overlay .modal-content,
+body.dark .page-container .modal-overlay .modal-content,
+body[data-theme="dark"] .page-container .modal-overlay .modal-content,
+[data-theme="dark"] .page-container .modal-overlay .modal-content,
+.dark .page-container .modal-overlay .modal-content,
+[data-bs-theme="dark"] .page-container .modal-overlay .modal-content {
+  background: #2d3748 !important;
+  background-color: #2d3748 !important;
+  color: #f7fafc !important;
+  border: 1px solid #4a5568 !important;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
 @keyframes slideIn {
   from {
     transform: translateY(20px);
@@ -995,11 +1413,11 @@ td {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--p-surface-border);
+  border-bottom: 1px solid var(--p-surface-border); /* DINAMIS */
 }
 .modal-header h2 {
   margin: 0;
-  color: var(--p-text-color);
+  color: var(--p-text-color); /* DINAMIS */
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -1008,7 +1426,7 @@ td {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--p-text-muted-color);
+  color: var(--p-text-muted-color); /* DINAMIS */
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -1017,8 +1435,8 @@ td {
   justify-content: center;
 }
 .btn-close:hover {
-  background-color: var(--p-surface-100);
-  color: var(--p-text-color);
+  background-color: var(--p-surface-100); /* DINAMIS */
+  color: var(--p-text-color); /* DINAMIS */
 }
 .transaction-form {
   padding: 2rem;
@@ -1032,27 +1450,27 @@ td {
   gap: 0.5rem;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--p-text-color);
+  color: var(--p-text-color); /* DINAMIS */
   font-size: 0.875rem;
 }
 .form-group input,
 .form-group select {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--p-surface-border);
+  border: 1px solid #f1f5f9; /* DINAMIS */
   border-radius: 8px;
   box-sizing: border-box;
   font-family: inherit;
   font-size: 1rem;
   transition: all 0.2s ease;
-  background-color: var(--p-surface-ground);
-  color: var(--p-text-color);
+  background-color: var(--p-surface-ground); /* DINAMIS */
+  color: var(--p-text-color); /* DINAMIS */
 }
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--p-primary-color);
-  box-shadow: 0 0 0 3px var(--p-primary-200);
+  border-color: var(--p-primary-color); /* DINAMIS */
+  box-shadow: 0 0 0 3px var(--p-primary-200); /* DINAMIS */
 }
 .amount-input-wrapper {
   display: flex;
@@ -1060,11 +1478,11 @@ td {
 }
 .currency-prefix {
   padding: 0.75rem 1rem;
-  background: var(--p-surface-100);
-  border: 1px solid var(--p-surface-border);
+  background: var(--p-surface-100); /* DINAMIS */
+  border: 1px solid var(--p-surface-border); /* DINAMIS */
   border-right: none;
   border-radius: 8px 0 0 8px;
-  color: var(--p-text-muted-color);
+  color: var(--p-text-muted-color); /* DINAMIS */
   font-weight: 500;
 }
 #amount {
@@ -1079,7 +1497,7 @@ td {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.8rem;
-  color: var(--p-text-muted-color);
+  color: var(--p-text-muted-color); /* DINAMIS */
 }
 .form-actions {
   display: flex;
@@ -1087,8 +1505,8 @@ td {
   gap: 1rem;
   margin-top: 2rem;
   padding: 1.5rem 2rem 1.5rem 2rem;
-  border-top: 1px solid var(--p-surface-border);
-  background-color: var(--p-surface-ground);
+  border-top: 1px solid var(--p-surface-border); /* DINAMIS */
+  background-color: var(--p-surface-ground); /* DINAMIS */
   margin: 2rem -2rem -2rem -2rem;
 }
 
@@ -1129,7 +1547,7 @@ td {
   width: 100%;
   max-width: 450px;
   padding: 2rem;
-  background-color: white;
+  background-color: var(--p-surface-card);
   border-radius: 16px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -4px rgba(0, 0, 0, 0.1);
@@ -1165,7 +1583,7 @@ td {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: rgb(255, 0, 0);
+  color: var(--p-text-color);
 }
 
 .dialog-title-group p {
@@ -1176,7 +1594,6 @@ td {
 
 .dialog-body-new {
   margin-top: 1.5rem;
-  background-color: #ffffff;
 }
 
 .dialog-transaction-details {
@@ -1228,6 +1645,15 @@ td {
   gap: 0.75rem;
 }
 
+@media (max-width: 1200px) {
+  .finance-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .ledger-table-container {
+    max-height: 350px;
+  }
+}
+
 @media (max-width: 1024px) {
   .tables-container {
     grid-template-columns: 1fr;
@@ -1250,6 +1676,10 @@ td {
   .table-header {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
+  }
+  .ledger-header {
+    flex-direction: column;
     gap: 1rem;
   }
   .table-content {

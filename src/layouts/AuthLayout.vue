@@ -13,13 +13,13 @@ import { RouterView } from "vue-router";
 
 <style scoped>
 .auth-layout {
-  display: flex;
+  
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background-color: var(
     --p-surface-ground
   ); /* Menggunakan variabel dari tema Aura */
-  padding: 1rem;
+  padding: 0rem;
 }
 </style>

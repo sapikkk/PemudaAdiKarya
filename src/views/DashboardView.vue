@@ -219,12 +219,6 @@
       </div>
     </div>
   </div>
-  <div class="section-wrapper">
-    <div class="section-header">
-      <h2>Aktivitas Terbaru</h2>
-    </div>
-    <ActivityLogView />
-  </div>
 </template>
 
 <script setup>

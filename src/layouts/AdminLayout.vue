@@ -3,7 +3,7 @@
     <!-- Mobile Header -->
     <header class="mobile-header">
       <div class="mobile-header-content">
-        <h3>Dashboard 17an</h3>
+        <h3>17 an Adhi Karya</h3>
         <div class="mobile-controls">
           <Button
             icon="pi pi-palette"

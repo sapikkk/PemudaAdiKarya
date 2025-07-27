@@ -1,49 +1,40 @@
 <template>
-  <div class="profile-view">
-    <div class="header">
+  <div class="page-container">
+    <header class="page-header">
       <h1>Profil Saya</h1>
       <p>Lihat dan kelola informasi akun Anda di sini.</p>
-    </div>
+    </header>
 
-    <div class="profile-card-wrapper">
-      <Card class="profile-card">
-        <template #content>
-          <div class="profile-content">
-            <div class="profile-avatar">
-              <!-- Menampilkan inisial nama pengguna sebagai avatar -->
-              <Avatar :label="userInitial" size="xlarge" shape="circle" />
-            </div>
-            <div class="profile-details">
-              <h2 class="user-name">{{ user.name }}</h2>
-              <p class="user-email">
-                <i class="pi pi-envelope"></i>
-                {{ user.email }}
-              </p>
-              <div class="user-role">
-                <i class="pi pi-shield"></i>
-                <span>Peran:</span>
-                <Tag :value="user.role" :severity="roleSeverity(user.role)" />
-              </div>
-            </div>
+    <div class="profile-card">
+      <div class="profile-content">
+        <div class="profile-avatar">
+          <span>{{ userInitial }}</span>
+        </div>
+        <div class="profile-details">
+          <h2 class="user-name">{{ user.name }}</h2>
+          <p class="user-email">
+            <i class="pi pi-envelope"></i>
+            <span>{{ user.email }}</span>
+          </p>
+          <div class="user-role">
+            <i class="pi pi-shield"></i>
+            <span>Peran:</span>
+            <span class="tag" :class="roleClass(user.role)">{{
+              user.role
+            }}</span>
           </div>
-        </template>
-        <template #footer>
-          <div class="profile-footer">
-            <Button
-              label="Edit Profil"
-              icon="pi pi-user-edit"
-              class="p-button-secondary"
-              disabled
-            />
-            <Button
-              label="Ubah Password"
-              icon="pi pi-key"
-              class="p-button-secondary"
-              disabled
-            />
-          </div>
-        </template>
-      </Card>
+        </div>
+      </div>
+      <div class="profile-footer">
+        <button class="btn btn-secondary" disabled>
+          <i class="pi pi-user-edit"></i>
+          <span>Edit Profil</span>
+        </button>
+        <button class="btn btn-secondary" disabled>
+          <i class="pi pi-key"></i>
+          <span>Ubah Password</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -51,12 +42,6 @@
 <script setup>
 import { computed } from "vue";
 import { useAuthStore } from "@/stores/authStore";
-
-// Import komponen PrimeVue
-import Card from "primevue/card";
-import Avatar from "primevue/avatar";
-import Tag from "primevue/tag";
-import Button from "primevue/button";
 
 const authStore = useAuthStore();
 const user = authStore.user;
@@ -73,85 +58,172 @@ const userInitial = computed(() => {
   return "U"; // Default
 });
 
-// Menentukan warna Tag berdasarkan peran
-const roleSeverity = (role) => {
-  if (role === "admin") {
-    return "danger";
-  }
-  return "info";
+// Menentukan kelas CSS untuk Tag berdasarkan peran
+const roleClass = (role) => {
+  return role === "admin" ? "tag-admin" : "tag-member";
 };
 </script>
 
 <style scoped>
-.profile-view {
+@import "primeicons/primeicons.css";
+
+/* General Layout */
+.page-container {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
-.header {
+.page-header {
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.header h1 {
-  font-size: 2rem;
+.page-header h1 {
+  font-size: 1.75rem;
   font-weight: 700;
-  color: var(--text-color);
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
-.header p {
-  color: var(--text-color-secondary);
+.page-header p {
+  color: var(--text-secondary);
   font-size: 1rem;
   margin: 0;
 }
 
+/* Profile Card */
 .profile-card {
+  background-color: var(--bg-secondary);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 
 .profile-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  padding: 2.5rem;
+  text-align: center;
 }
 
-.profile-avatar :deep(.p-avatar) {
-  background-color: var(--primary-color);
-  color: #ffffff;
-  font-size: 2rem;
+.profile-avatar {
   width: 100px;
   height: 100px;
-}
-
-.profile-details {
-  flex-grow: 1;
+  border-radius: 50%;
+  background-color: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 600;
 }
 
 .user-name {
   font-size: 1.75rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
 }
 
 .user-email,
 .user-role {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: var(--text-color-secondary);
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
   margin-bottom: 0.75rem;
 }
 
-.user-role .p-tag {
+.user-role .tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
   text-transform: capitalize;
+}
+
+.tag-admin {
+  background-color: #dc2626;
+  color: white;
+}
+
+.tag-member {
+  background-color: #64748b;
+  color: white;
 }
 
 .profile-footer {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--surface-border);
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+}
+
+/* Button Styles */
+.btn {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+}
+
+/* Responsive */
+@media (min-width: 640px) {
+  .profile-content {
+    flex-direction: row;
+    text-align: left;
+  }
+  .user-email,
+  .user-role {
+    justify-content: flex-start;
+  }
+}
+
+/* CSS Variables for Light & Dark Mode */
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-hover: #f1f5f9;
+  --border-color: #e2e8f0;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-hover: #334155;
+  --border-color: #4a5568;
+  --text-primary: #f7fafc;
+  --text-secondary: #a0aec0;
 }
 </style>

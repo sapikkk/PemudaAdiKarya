@@ -321,6 +321,39 @@ const deleteConfirmed = async () => {
 </script>
 
 <style scoped>
+/* CSS Variables for Light & Dark Mode */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-hover: #f7fafc;
+  --bg-expand: #f1f5f9;
+  --bg-table-header: #f7fafc;
+  --bg-state: #f7fafc;
+  --bg-error: #fed7d7;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+  --text-muted: #a0aec0;
+  --text-error: #c53030;
+  --border-color: #e2e8f0;
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a202c;
+  --bg-secondary: #2d3748;
+  --bg-hover: #4a5568;
+  --bg-expand: #2d3748;
+  --bg-table-header: #2d3748;
+  --bg-state: #2d3748;
+  --bg-error: #742a2a;
+  --text-primary: #f7fafc;
+  --text-secondary: #a0aec0;
+  --text-muted: #718096;
+  --text-error: #fc8181;
+  --border-color: #4a5568;
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+}
+
 /* General Layout */
 .participants-view {
   max-width: 1000px;
@@ -328,6 +361,7 @@ const deleteConfirmed = async () => {
   padding: 0 1rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
+  color: var(--text-primary);
 }
 
 .page-header {
@@ -336,13 +370,15 @@ const deleteConfirmed = async () => {
   align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border-color);
 }
 
-h1 {
+h1,
+h2,
+h3 {
   font-size: 1.75rem;
   font-weight: 600;
-  color: #1a202c;
+  color: var(--text-primary);
 }
 
 /* Buttons */
@@ -368,12 +404,12 @@ h1 {
   background-color: #1d4ed8;
 }
 .btn-secondary {
-  background-color: #ffffff;
-  color: #4a5568;
-  border-color: #cbd5e0;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
 }
 .btn-secondary:hover:not(:disabled) {
-  background-color: #f7fafc;
+  background-color: var(--bg-hover);
 }
 .btn-danger {
   background-color: #dc2626;
@@ -386,10 +422,10 @@ h1 {
 
 /* Table */
 .table-container {
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
-  background-color: white;
+  background-color: var(--bg-primary);
 }
 table {
   width: 100%;
@@ -399,15 +435,15 @@ th,
 td {
   padding: 0.8rem 1rem;
   text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-  color: #4a5568;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 th {
-  background-color: #f7fafc;
+  background-color: var(--bg-table-header);
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: #718096;
+  color: var(--text-secondary);
 }
 tr:last-child td {
   border-bottom: none;
@@ -421,7 +457,7 @@ tr:last-child td {
   text-align: center;
 }
 .text-muted {
-  color: #a0aec0;
+  color: var(--text-muted);
 }
 
 /* Tags */
@@ -431,8 +467,8 @@ tr:last-child td {
   gap: 0.5rem;
 }
 .tag {
-  background-color: #edf2f7;
-  color: #4a5568;
+  background-color: var(--bg-expand);
+  color: var(--text-secondary);
   padding: 0.25rem 0.6rem;
   border-radius: 12px;
   font-size: 0.8rem;
@@ -442,36 +478,66 @@ tr:last-child td {
 .state-feedback {
   text-align: center;
   padding: 3rem;
-  background-color: #f7fafc;
+  background-color: var(--bg-state);
   border-radius: 8px;
-  color: #718096;
+  color: var(--text-secondary);
 }
 .state-feedback.error {
-  background-color: #fed7d7;
-  color: #c53030;
+  background-color: var(--bg-error);
+  color: var(--text-error);
 }
-
-/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
-.modal-content {
-  background-color: white;
+
+/* MODAL CONTENT - SUPER HIGH SPECIFICITY */
+.participants-view .modal-overlay .modal-content {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0 !important;
+  animation: modalAppear 0.3s ease-out;
+  position: relative;
+  z-index: 1001;
+  color: #1a202c !important;
 }
+
+/* DARK MODE - MAXIMUM SPECIFICITY WITH !important */
+html.dark .participants-view .modal-overlay .modal-content,
+html[data-theme="dark"] .participants-view .modal-overlay .modal-content,
+body.dark .participants-view .modal-overlay .modal-content,
+body[data-theme="dark"] .participants-view .modal-overlay .modal-content,
+[data-theme="dark"] .participants-view .modal-overlay .modal-content,
+.dark .participants-view .modal-overlay .modal-content,
+[data-bs-theme="dark"] .participants-view .modal-overlay .modal-content {
+  background: #2d3748 !important;
+  background-color: #2d3748 !important;
+  color: #f7fafc !important;
+  border: 1px solid #4a5568 !important;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
 .modal-content.dialog {
   max-width: 400px;
 }
@@ -479,7 +545,7 @@ tr:last-child td {
 .modal-content h3 {
   margin-top: 0;
   margin-bottom: 1.5rem;
-  color: #1a202c;
+  color: var(--text-primary);
 }
 .form-group {
   margin-bottom: 1.25rem;
@@ -488,23 +554,26 @@ tr:last-child td {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #4a5568;
+  color: var(--text-secondary);
 }
 .form-group input[type="text"] {
   width: 100%;
   padding: 0.6rem 0.8rem;
-  border: 1px solid #cbd5e0;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   box-sizing: border-box;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 .form-group input:disabled {
-  background-color: #f7fafc;
+  background-color: var(--bg-expand);
   cursor: not-allowed;
 }
 .checkbox-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  color: var(--text-primary);
 }
 .checkbox-group div {
   display: flex;
@@ -523,12 +592,12 @@ tr:last-child td {
   margin-top: 2rem;
 }
 .form-error {
-  color: #dc2626;
+  color: var(--text-error);
   font-size: 0.9rem;
   margin-bottom: 1rem;
   padding: 0.5rem;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+  background-color: var(--bg-error);
+  border: 1px solid var(--text-error);
   border-radius: 4px;
 }
 </style>

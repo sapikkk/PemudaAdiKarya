@@ -265,7 +265,7 @@ const deleteConfirmed = async () => {
 <style scoped>
 /* General Layout */
 .page-container {
-  max-width: 1000px;
+  max-width: 1500px;
   margin: 2rem auto;
   padding: 0 1rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
@@ -430,27 +430,57 @@ tbody:last-child .expansion-row:last-child td {
   background-color: var(--bg-error);
   color: var(--text-error);
 }
-
-/* Modal & Form */
+/* MODAL STYLES - AGGRESSIVE DARK MODE FIX */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
-.modal-content {
-  background-color: var(--bg-primary);
+
+/* MODAL CONTENT - SUPER HIGH SPECIFICITY */
+.page-container .modal-overlay .modal-content {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0 !important;
+  animation: modalAppear 0.3s ease-out;
+  position: relative;
+  z-index: 1001;
+  color: #1a202c !important;
+}
+
+/* DARK MODE - MAXIMUM SPECIFICITY WITH !important */
+html.dark .page-container .modal-overlay .modal-content,
+html[data-theme="dark"] .page-container .modal-overlay .modal-content,
+body.dark .page-container .modal-overlay .modal-content,
+body[data-theme="dark"] .page-container .modal-overlay .modal-content,
+[data-theme="dark"] .page-container .modal-overlay .modal-content,
+.dark .page-container .modal-overlay .modal-content,
+[data-bs-theme="dark"] .page-container .modal-overlay .modal-content {
+  background: #2d3748 !important;
+  background-color: #2d3748 !important;
+  color: #f7fafc !important;
+  border: 1px solid #4a5568 !important;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.6),
+    0 10px 25px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
 }
 .modal-content.dialog {
   max-width: 400px;
@@ -462,7 +492,7 @@ tbody:last-child .expansion-row:last-child td {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-secondary); /* Menggunakan variabel */
 }
 .form-group input,
 .form-group textarea {
@@ -485,7 +515,7 @@ tbody:last-child .expansion-row:last-child td {
 /* CSS Variables for Light Mode */
 :root {
   --bg-primary: #ffffff;
-  --bg-secondary: #ffffff;
+  --bg-secondary: #ffffff; /* Latar belakang untuk elemen sekunder seperti modal */
   --bg-hover: #f7fafc;
   --bg-expand: #f1f5f9;
   --bg-table-header: #f7fafc;
@@ -497,13 +527,14 @@ tbody:last-child .expansion-row:last-child td {
   --text-muted: #a0aec0;
   --text-error: #c53030;
   --border-color: #e2e8f0;
+  --overlay-bg: rgba(0, 0, 0, 0.5); /* Variabel baru untuk overlay */
 }
 
 /* CSS Variables for Dark Mode */
 [data-theme="dark"] {
   --bg-primary: #1a202c;
-  --bg-secondary: #2d3748;
-  --bg-hover: #2d3748;
+  --bg-secondary: #2d3748; /* Latar belakang modal di mode gelap */
+  --bg-hover: #4a5568; /* Disesuaikan agar lebih terlihat */
   --bg-expand: #2d3748;
   --bg-table-header: #2d3748;
   --bg-expansion: #2d3748;
@@ -514,5 +545,6 @@ tbody:last-child .expansion-row:last-child td {
   --text-muted: #718096;
   --text-error: #fc8181;
   --border-color: #4a5568;
+  --overlay-bg: rgba(0, 0, 0, 0.7); /* Overlay lebih gelap di mode gelap */
 }
 </style>

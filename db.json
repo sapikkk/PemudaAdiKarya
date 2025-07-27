@@ -2,21 +2,21 @@
   "users": [
     {
       "id": "1",
-      "name": "Admin Utama",
-      "email": "1@example.com",
+      "name": "Admin",
+      "email": "admin@gmail.com",
       "password": "admin",
       "role": "admin"
     },
     {
       "id": "2",
-      "name": "User Biasa",
-      "email": "user@example.com",
+      "name": "User",
+      "email": "user@gmail.com",
       "password": "userpassword",
       "role": "user"
     },
     {
       "id": "2b0c",
-      "name": "sapik",
+      "name": "Syapik",
       "email": "sapik@gmail.com",
       "password": "password",
       "role": "user"
@@ -264,13 +264,17 @@
         {
           "timestamp": "2025-07-25T10:38:20.262Z",
           "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\". Disposisi diperbarui menjadi \"belum jumpa sama orang tua pemilik untuk pembicaraan lanjut\". Respon donatur diperbarui menjadi \"sudah di respon melalui wa\"."
+        },
+        {
+          "timestamp": "2025-07-27T08:50:02.931Z",
+          "log": "Disposisi diperbarui menjadi \"sudah aman, menunggu proses selanjutnya\". Respon donatur diperbarui menjadi \"akhir bulan ini lagi banyak yang diurus, tapi jelas, ini sudah aman, tinggal nunggu info aja lagi, tidak ada yang perlu di risaukan lagi\n\"."
         }
       ],
       "name": "PRIORITAS GROUP WILAYAH III",
       "submitterName": "sapik",
-      "disposition": "belum jumpa sama orang tua pemilik untuk pembicaraan lanjut",
-      "donorResponse": "sudah di respon melalui wa",
-      "lastUpdated": "2025-07-25T10:38:20.262Z"
+      "disposition": "sudah aman, menunggu proses selanjutnya",
+      "donorResponse": "akhir bulan ini lagi banyak yang diurus, tapi jelas, ini sudah aman, tinggal nunggu info aja lagi, tidak ada yang perlu di risaukan lagi\n",
+      "lastUpdated": "2025-07-27T08:50:02.931Z"
     },
     {
       "id": "e798",
@@ -324,13 +328,17 @@
         {
           "timestamp": "2025-07-25T10:35:55.598Z",
           "log": "Status diubah dari \"Diajukan\" menjadi \"Diproses\". Respon donatur diperbarui menjadi \"minggu ini bisa di beritahu progressnya seperti apa\"."
+        },
+        {
+          "timestamp": "2025-07-27T10:04:30.864Z",
+          "log": "Disposisi diperbarui menjadi \"sudah sampai atasan \". Respon donatur diperbarui menjadi \"Cek kondisi dulu, senin atau selasa dikabari\"."
         }
       ],
       "name": "Proyek AMP Riau",
       "submitterName": "Sapik",
-      "disposition": "sudah dengan om kevin",
-      "donorResponse": "minggu ini bisa di beritahu progressnya seperti apa",
-      "lastUpdated": "2025-07-25T10:35:55.599Z"
+      "disposition": "sudah sampai atasan ",
+      "donorResponse": "Cek kondisi dulu, senin atau selasa dikabari",
+      "lastUpdated": "2025-07-27T10:04:30.864Z"
     },
     {
       "id": "222c",
@@ -427,13 +435,17 @@
         {
           "timestamp": "2025-07-26T07:44:56.496Z",
           "log": "Disposisi diperbarui menjadi \"ajukan via wa\". Respon donatur diperbarui menjadi \"sudah diterima dan di baca\"."
+        },
+        {
+          "timestamp": "2025-07-27T08:49:14.484Z",
+          "log": "Respon donatur diperbarui menjadi \"besok pagi ya, saya sedang ada acara diluar fiq.\"."
         }
       ],
       "name": "Teguh",
       "submitterName": "sapik",
       "disposition": "ajukan via wa",
-      "lastUpdated": "2025-07-26T07:44:56.497Z",
-      "donorResponse": "sudah diterima dan di baca"
+      "lastUpdated": "2025-07-27T08:49:14.485Z",
+      "donorResponse": "besok pagi ya, saya sedang ada acara diluar fiq."
     },
     {
       "id": "e7db",
@@ -458,13 +470,33 @@
         {
           "timestamp": "2025-07-26T08:27:38.260Z",
           "log": "Proposal \"Ade Widyowati\" dibuat oleh sapik."
+        },
+        {
+          "timestamp": "2025-07-27T10:09:53.076Z",
+          "log": "Disposisi diperbarui menjadi \"bos di proyek belum di tempat\". Respon donatur diperbarui menjadi \"kalau sudah tf nanti di kabari\n\"."
         }
       ],
       "name": "Ade Widyowati",
       "submitterName": "sapik",
-      "donorResponse": "kirim saja proposal nya",
-      "disposition": "sedang coba lobi\n",
-      "lastUpdated": "2025-07-26T08:27:38.262Z"
+      "donorResponse": "kalau sudah tf nanti di kabari\n",
+      "disposition": "bos di proyek belum di tempat",
+      "lastUpdated": "2025-07-27T10:09:53.076Z"
+    },
+    {
+      "id": "c132",
+      "status": "Diajukan",
+      "submissionDate": "2025-07-27T00:00:00.000Z",
+      "history": [
+        {
+          "timestamp": "2025-07-27T09:26:27.807Z",
+          "log": "Proposal \"Sudarmanto\" dibuat oleh syafiq."
+        }
+      ],
+      "name": "Sudarmanto",
+      "submitterName": "syafiq",
+      "disposition": "di read, dan insya allah ",
+      "donorResponse": "read.",
+      "lastUpdated": "2025-07-27T09:26:27.807Z"
     }
   ],
   "tasks": [
@@ -545,21 +577,24 @@
   ],
   "incomes": [
     {
-      "id": "9dc4",
       "description": "Kartama Skin Care",
       "category": "Dana Sponsor",
-      "amount": 500000
+      "amount": 500000,
+      "date": "2025-07-25",
+      "id": "9dc4"
     },
     {
-      "id": "579d",
       "description": "CV. Ramindo Karya Mandiri",
       "category": "Dana Sponsor",
-      "amount": 1000000
+      "amount": 1000000,
+      "date": "2025-07-25",
+      "id": "579d"
     },
     {
       "description": "Pak Ferry Gonaldi",
       "category": "Donasi",
       "amount": 200000,
+      "date": "2025-07-25",
       "id": "d4a8"
     },
     {
@@ -609,12 +644,10 @@
   ],
   "participants": [
     {
-      "id": "4e40",
-      "name": "kang padel",
-      "contact": "34213121",
-      "competitionIds": [
-        "cbd5"
-      ]
+      "id": "4912",
+      "name": "Bang Ipan",
+      "contact": "124234232r",
+      "competitionIds": ["65af"]
     }
   ],
   "activities": [
@@ -647,7 +680,7 @@
       "title": "buat cap stempel",
       "description": "untuk surat menyurat",
       "divisionId": "5",
-      "status": "todo",
+      "status": "inprogress",
       "createdAt": "2025-07-25T11:50:16.505Z"
     },
     {

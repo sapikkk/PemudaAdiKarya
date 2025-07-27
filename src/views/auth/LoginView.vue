@@ -1,55 +1,52 @@
 <template>
-  <div class="login-card">
-    <h2 class="card-title">Selamat Datang Kembali!</h2>
-    <p class="card-subtitle">Silakan masuk untuk melanjutkan.</p>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2 class="card-title">Selamat Datang Kembali!</h2>
+      <p class="card-subtitle">Silakan masuk untuk melanjutkan.</p>
 
-    <form @submit.prevent="handleLogin">
-      <div class="field">
-        <label for="email">Email</label>
-        <InputText
-          id="email"
-          v-model="email"
-          type="email"
-          placeholder="contoh@email.com"
-          class="w-full"
-          required
-        />
+      <form @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            v-model="email"
+            type="email"
+            placeholder="contoh@email.com"
+            class="form-input"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            placeholder="Masukkan password"
+            class="form-input"
+            required
+          />
+        </div>
+
+        <div v-if="authStore.error && !authStore.loading" class="form-error">
+          {{ authStore.error }}
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary w-full"
+          :disabled="authStore.loading"
+        >
+          {{ authStore.loading ? "Memproses..." : "Login" }}
+        </button>
+      </form>
+
+      <div class="switch-link">
+        <p>
+          Belum punya akun?
+          <router-link :to="{ name: 'Register' }">Daftar di sini</router-link>
+        </p>
       </div>
-      <div class="field">
-        <label for="password">Password</label>
-        <Password
-          id="password"
-          v-model="password"
-          placeholder="Masukkan password"
-          :feedback="false"
-          toggleMask
-          class="w-full"
-          inputClass="w-full"
-          required
-        />
-      </div>
-
-      <!-- Menggunakan komponen Message untuk error inline -->
-      <Message
-        v-if="authStore.error && !authStore.loading"
-        severity="error"
-        :closable="false"
-        >{{ authStore.error }}</Message
-      >
-
-      <Button
-        type="submit"
-        label="Login"
-        class="w-full submit-button"
-        :loading="authStore.loading"
-      />
-    </form>
-
-    <div class="register-link">
-      <p>
-        Belum punya akun?
-        <router-link :to="{ name: 'Register' }">Daftar di sini</router-link>
-      </p>
     </div>
   </div>
 </template>
@@ -59,7 +56,6 @@ import { ref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "primevue/usetoast";
-import Message from "primevue/message"; // Impor Message untuk error inline
 
 const email = ref("");
 const password = ref("");
@@ -71,7 +67,6 @@ const handleLogin = async () => {
   await authStore.login({ email: email.value, password: password.value });
 
   if (!authStore.error) {
-    // Tampilkan notifikasi sukses
     toast.add({
       severity: "success",
       summary: "Login Berhasil!",
@@ -80,7 +75,6 @@ const handleLogin = async () => {
     });
     router.push({ name: "Dashboard" });
   }
-  // Tidak perlu notifikasi error di sini karena sudah ditangani oleh <Message>
 };
 
 onUnmounted(() => {
@@ -89,66 +83,141 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.login-card {
+/* General Layout */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  padding: 1rem;
+}
+
+.auth-card {
   width: 100%;
-  max-width: 450px;
+  max-width: 420px;
   padding: 2.5rem;
-  background-color: var(--p-surface-card);
+  background-color: var(--bg-secondary);
   border-radius: 12px;
-  border: 1px solid var(--p-surface-border);
-  box-shadow: 0 4px 20px var(--p-shadow-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
 
 .card-title {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: var(--p-text-color);
+  color: var(--text-primary);
 }
 
 .card-subtitle {
   margin-bottom: 2rem;
-  color: var(--p-text-muted-color);
+  color: var(--text-secondary);
 }
 
-.field {
-  margin-bottom: 1.5rem;
+/* Form Styles */
+.form-group {
+  margin-bottom: 1.25rem;
   text-align: left;
 }
 
-.field label {
+.form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--p-text-color);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-family: inherit;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #2563eb;
 }
 
 .w-full {
   width: 100%;
 }
 
-.submit-button {
-  margin-top: 1rem;
+.form-error {
+  color: var(--text-error);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
   padding: 0.75rem;
+  background-color: var(--bg-error);
+  border: 1px solid var(--text-error);
+  border-radius: 6px;
+  text-align: center;
 }
 
-.p-message {
-  margin-bottom: 1.5rem;
+.switch-link {
+  margin-top: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
-.register-link {
-  margin-top: 2rem;
-  color: var(--p-text-muted-color);
-}
-
-.register-link a {
+.switch-link a {
   font-weight: 600;
-  color: var(--p-primary-color);
+  color: #2563eb;
   text-decoration: none;
 }
 
-.register-link a:hover {
+.switch-link a:hover {
   text-decoration: underline;
+}
+
+/* Button Styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+/* CSS Variables for Light & Dark Mode */
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --border-color: #e2e8f0;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+  --bg-error: #fef2f2;
+  --text-error: #ef4444;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --border-color: #4a5568;
+  --text-primary: #f7fafc;
+  --text-secondary: #a0aec0;
+  --bg-error: #452323;
+  --text-error: #fca5a5;
 }
 </style>
