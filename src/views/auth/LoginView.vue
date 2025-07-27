@@ -1,112 +1,95 @@
 <template>
   <div class="auth-container">
     <div class="auth-card">
-      <div class="auth-header">
-        <h1 class="card-title">Selamat Datang Kembali!</h1>
-        <p class="card-subtitle">Silakan masuk untuk melanjutkan.</p>
+      <h2 class="card-title">Selamat Datang Kembali!</h2>
+      <p class="card-subtitle">Silakan masuk untuk melanjutkan.</p>
+
+      <!-- PERBAIKAN: Tambahkan debug info di development -->
+      <div v-if="showDebugInfo" class="debug-info">
+        <p><strong>Debug Info:</strong></p>
+        <p>Environment: {{ isDev ? 'Development' : 'Production' }}</p>
+        <p>Host: {{ window.location.hostname }}</p>
+        <p>API URL: {{ apiUrl }}</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="auth-form">
+      <form @submit.prevent="handleLogin">
         <div class="form-group">
-          <label for="email" class="form-label">Email</label>
+          <label for="email">Email</label>
           <input
             id="email"
             v-model="email"
             type="email"
             placeholder="contoh@email.com"
             class="form-input"
-            :class="{ 'form-input-error': emailError }"
+            :disabled="authStore.loading"
             required
-            autocomplete="email"
-            autocapitalize="none"
-            autocorrect="off"
-            spellcheck="false"
           />
-          <span v-if="emailError" class="form-error-text">{{ emailError }}</span>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            placeholder="Masukkan password"
+            class="form-input"
+            :disabled="authStore.loading"
+            required
+          />
         </div>
 
-        <div class="form-group">
-          <label for="password" class="form-label">Password</label>
-          <div class="password-input-container">
-            <input
-              id="password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Masukkan password"
-              class="form-input"
-              :class="{ 'form-input-error': passwordError }"
-              required
-              autocomplete="current-password"
-            />
-            <button
-              type="button"
-              class="password-toggle"
-              @click="togglePassword"
-              :aria-label="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
+        <!-- PERBAIKAN: Error display yang lebih baik -->
+        <div v-if="authStore.error && !authStore.loading" class="form-error">
+          <div class="error-icon">⚠️</div>
+          <div class="error-content">
+            <strong>Login Gagal:</strong>
+            <p>{{ authStore.error }}</p>
+            <button 
+              type="button" 
+              class="retry-btn"
+              @click="clearErrorAndRetry"
             >
-              <svg v-if="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
-              </svg>
-              <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
+              Coba Lagi
             </button>
           </div>
-          <span v-if="passwordError" class="form-error-text">{{ passwordError }}</span>
         </div>
 
-        <div class="form-options">
-          <label class="checkbox-container">
-            <input type="checkbox" v-model="rememberMe">
-            <span class="checkmark"></span>
-            Ingat saya
-          </label>
-          <router-link to="/forgot-password" class="forgot-link">
-            Lupa password?
-          </router-link>
-        </div>
-
-        <div v-if="authStore.error && !authStore.loading" class="form-error">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="15" y1="9" x2="9" y2="15"/>
-            <line x1="9" y1="9" x2="15" y2="15"/>
-          </svg>
-          {{ authStore.error }}
+        <!-- PERBAIKAN: Loading state yang lebih informatif -->
+        <div v-if="authStore.loading" class="loading-info">
+          <div class="spinner"></div>
+          <p>{{ loadingMessage }}</p>
         </div>
 
         <button
           type="submit"
-          class="btn btn-primary btn-full"
-          :disabled="authStore.loading || !isFormValid"
-          :aria-busy="authStore.loading"
+          class="btn btn-primary w-full"
+          :disabled="authStore.loading || !email || !password"
         >
-          <span v-if="authStore.loading" class="btn-loading">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 12a9 9 0 11-6.219-8.56"/>
-            </svg>
-            Memproses...
-          </span>
-          <span v-else>Masuk</span>
+          {{ authStore.loading ? loadingMessage : "Login" }}
         </button>
       </form>
 
-      <div class="auth-divider">
-        <span>atau</span>
-      </div>
-
-      <div class="social-login">
-        <button type="button" class="btn btn-social" @click="loginWithGoogle" :disabled="authStore.loading">
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-            <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-          </svg>
-          Masuk dengan Google
-        </button>
+      <!-- PERBAIKAN: Tambahkan quick login untuk testing -->
+      <div v-if="isDev" class="quick-login">
+        <p class="quick-login-title">Quick Login (Dev Only):</p>
+        <div class="quick-login-buttons">
+          <button 
+            type="button" 
+            class="btn btn-secondary btn-small"
+            @click="quickLogin('admin')"
+            :disabled="authStore.loading"
+          >
+            Login as Admin
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-secondary btn-small"
+            @click="quickLogin('user')"
+            :disabled="authStore.loading"
+          >
+            Login as User
+          </button>
+        </div>
       </div>
 
       <div class="switch-link">
@@ -121,569 +104,412 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "primevue/usetoast";
 
 const email = ref("");
 const password = ref("");
-const rememberMe = ref(false);
-const showPassword = ref(false);
-const emailError = ref("");
-const passwordError = ref("");
-
 const authStore = useAuthStore();
 const router = useRouter();
-const route = useRoute();
 const toast = useToast();
 
-// Form validation
-const isFormValid = computed(() => {
-  return email.value.length > 0 && 
-         password.value.length > 0 && 
-         !emailError.value && 
-         !passwordError.value;
+// PERBAIKAN: Computed properties untuk debugging
+const isDev = computed(() => import.meta.env.DEV);
+const showDebugInfo = ref(false);
+const loadingMessage = ref("Memproses...");
+
+// PERBAIKAN: Get API URL untuk debugging
+const apiUrl = computed(() => {
+  if (import.meta.env.DEV || window.location.hostname === 'localhost') {
+    return 'http://localhost:3001/users';
+  }
+  if (window.location.hostname.includes('vercel.app')) {
+    return `${window.location.origin}/api/users`;
+  }
+  return `${window.location.origin}/api/users`;
 });
 
-// Validate email
-const validateEmail = () => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email.value) {
-    emailError.value = "Email tidak boleh kosong";
-  } else if (!emailRegex.test(email.value)) {
-    emailError.value = "Format email tidak valid";
-  } else {
-    emailError.value = "";
+// PERBAIKAN: Initialize auth store
+onMounted(() => {
+  authStore.initializeAuth();
+  
+  // Show debug info in development
+  if (isDev.value) {
+    showDebugInfo.value = true;
   }
-};
-
-// Validate password
-const validatePassword = () => {
-  if (!password.value) {
-    passwordError.value = "Password tidak boleh kosong";
-  } else if (password.value.length < 6) {
-    passwordError.value = "Password minimal 6 karakter";
-  } else {
-    passwordError.value = "";
+  
+  // Check if already authenticated
+  if (authStore.isAuthenticated) {
+    router.push({ name: "Dashboard" });
   }
-};
-
-const togglePassword = () => {
-  showPassword.value = !showPassword.value;
-};
+});
 
 const handleLogin = async () => {
-  // Validate form
-  validateEmail();
-  validatePassword();
-  
-  if (!isFormValid.value) {
+  if (!email.value || !password.value) {
+    toast.add({
+      severity: "warn",
+      summary: "Input Tidak Lengkap",
+      detail: "Harap isi email dan password.",
+      life: 3000,
+    });
     return;
   }
 
-  try {
-    await authStore.login({ 
-      email: email.value, 
-      password: password.value,
-      rememberMe: rememberMe.value
-    });
-
-    if (!authStore.error) {
-      toast.add({
-        severity: "success",
-        summary: "Login Berhasil!",
-        detail: `Selamat datang kembali, ${authStore.user?.name || 'User'}.`,
-        life: 3000,
-      });
-      
-      // Redirect to intended page or dashboard
-      const redirectTo = route.query.redirect || { name: "Dashboard" };
-      router.push(redirectTo);
+  // PERBAIKAN: Update loading message
+  loadingMessage.value = "Menghubungi server...";
+  
+  setTimeout(() => {
+    if (authStore.loading) {
+      loadingMessage.value = "Memverifikasi kredensial...";
     }
-  } catch (error) {
-    console.error('Login error:', error);
+  }, 2000);
+
+  await authStore.login({ 
+    email: email.value.trim(), 
+    password: password.value 
+  });
+
+  if (!authStore.error) {
+    toast.add({
+      severity: "success",
+      summary: "Login Berhasil!",
+      detail: `Selamat datang kembali, ${authStore.user.name}.`,
+      life: 3000,
+    });
+    router.push({ name: "Dashboard" });
+  } else {
+    // PERBAIKAN: Toast error untuk feedback yang lebih baik
     toast.add({
       severity: "error",
       summary: "Login Gagal",
-      detail: "Terjadi kesalahan. Silakan coba lagi.",
+      detail: authStore.error,
       life: 5000,
     });
   }
+  
+  loadingMessage.value = "Memproses...";
 };
 
-const loginWithGoogle = async () => {
-  try {
-    // Implement Google OAuth login
-    toast.add({
-      severity: "info",
-      summary: "Fitur Segera Hadir",
-      detail: "Login dengan Google akan segera tersedia.",
-      life: 3000,
-    });
-  } catch (error) {
-    console.error('Google login error:', error);
+// PERBAIKAN: Quick login untuk development
+const quickLogin = async (role) => {
+  if (role === 'admin') {
+    email.value = 'admin@example.com';
+    password.value = 'admin123';
+  } else {
+    email.value = 'user@example.com';
+    password.value = 'user123';
   }
+  await handleLogin();
 };
 
-// Real-time validation
-const handleEmailInput = () => {
-  if (emailError.value) {
-    validateEmail();
-  }
+// PERBAIKAN: Clear error dan retry
+const clearErrorAndRetry = () => {
+  authStore.clearError();
+  // Focus ke email input
+  document.getElementById('email')?.focus();
 };
-
-const handlePasswordInput = () => {
-  if (passwordError.value) {
-    validatePassword();
-  }
-};
-
-onMounted(() => {
-  // Clear any existing errors
-  authStore.error = null;
-  
-  // Focus on email input
-  const emailInput = document.getElementById('email');
-  if (emailInput) {
-    emailInput.focus();
-  }
-  
-  // Add real-time validation
-  const emailInput2 = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  
-  if (emailInput2) {
-    emailInput2.addEventListener('blur', validateEmail);
-    emailInput2.addEventListener('input', handleEmailInput);
-  }
-  
-  if (passwordInput) {
-    passwordInput.addEventListener('blur', validatePassword);
-    passwordInput.addEventListener('input', handlePasswordInput);
-  }
-});
 
 onUnmounted(() => {
-  authStore.error = null;
-  
-  // Clean up event listeners
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  
-  if (emailInput) {
-    emailInput.removeEventListener('blur', validateEmail);
-    emailInput.removeEventListener('input', handleEmailInput);
-  }
-  
-  if (passwordInput) {
-    passwordInput.removeEventListener('blur', validatePassword);
-    passwordInput.removeEventListener('input', handlePasswordInput);
-  }
+  authStore.clearError();
 });
+
+// PERBAIKAN: Make window available in template
+const window = globalThis.window;
 </script>
 
 <style scoped>
-/* Mobile-First Auth Container */
+/* General Layout */
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--surface-50) 0%, var(--surface-100) 100%);
+  background-color: var(--bg-primary);
   padding: 1rem;
-  position: relative;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 400px;
-  padding: 2rem 1.5rem;
-  background-color: var(--surface-card);
-  border-radius: var(--border-radius-xl);
+  max-width: 420px;
+  padding: 2.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
   border: 1px solid var(--border-color);
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.auth-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-color-light) 100%);
-}
-
-.auth-header {
-  margin-bottom: 2rem;
 }
 
 .card-title {
-  font-size: var(--font-size-2xl);
+  font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: var(--text-color);
-  line-height: var(--line-height-tight);
+  color: var(--text-primary);
 }
 
 .card-subtitle {
-  margin-bottom: 0;
-  color: var(--text-color-secondary);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+}
+
+/* PERBAIKAN: Debug info styles */
+.debug-info {
+  background-color: var(--bg-debug);
+  border: 1px solid var(--border-debug);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  text-align: left;
+  color: var(--text-debug);
+}
+
+.debug-info p {
+  margin: 0.25rem 0;
 }
 
 /* Form Styles */
-.auth-form {
+.form-group {
+  margin-bottom: 1.25rem;
   text-align: left;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-label {
+.form-group label {
   display: block;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  color: var(--text-color);
-  font-size: var(--font-size-sm);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .form-input {
   width: 100%;
-  padding: 0.875rem 1rem;
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius-md);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
   box-sizing: border-box;
   font-family: inherit;
-  font-size: var(--font-size-base);
-  background-color: var(--surface-0);
-  color: var(--text-color);
-  transition: all 0.2s ease;
-  line-height: var(--line-height-normal);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #2563eb;
 }
 
-.form-input-error {
-  border-color: var(--error-color);
+.form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.form-input-error:focus {
-  border-color: var(--error-color);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+.w-full {
+  width: 100%;
 }
 
-.password-input-container {
-  position: relative;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-color-secondary);
-  padding: 4px;
-  border-radius: 4px;
-  transition: color 0.2s ease;
-}
-
-.password-toggle:hover {
-  color: var(--text-color);
-}
-
-.password-toggle:focus {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-}
-
-.form-error-text {
-  display: block;
-  color: var(--error-color);
-  font-size: var(--font-size-xs);
-  margin-top: 0.5rem;
-  font-weight: 500;
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  color: var(--text-color-secondary);
-}
-
-.checkbox-container input {
-  margin-right: 0.5rem;
-  accent-color: var(--primary-color);
-}
-
-.forgot-link {
-  color: var(--primary-color);
-  text-decoration: none;
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.forgot-link:hover {
-  color: var(--primary-color-dark);
-  text-decoration: underline;
-}
-
+/* PERBAIKAN: Better error styles */
 .form-error {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--error-color);
-  font-size: var(--font-size-sm);
-  margin-bottom: 1.5rem;
+  background-color: var(--bg-error);
+  border: 1px solid var(--text-error);
+  border-radius: 6px;
   padding: 1rem;
-  background-color: var(--surface-50);
-  border: 1px solid var(--error-color);
-  border-radius: var(--border-radius-md);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
   text-align: left;
 }
 
-.form-error svg {
+.error-icon {
+  font-size: 1.2rem;
   flex-shrink: 0;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-content strong {
+  color: var(--text-error);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.error-content p {
+  color: var(--text-error);
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+}
+
+.retry-btn {
+  background-color: var(--text-error);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.retry-btn:hover {
+  opacity: 0.8;
+}
+
+/* PERBAIKAN: Loading styles */
+.loading-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-loading);
+  border-radius: 6px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-top: 2px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* PERBAIKAN: Quick login styles */
+.quick-login {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: var(--bg-debug);
+  border-radius: 6px;
+  border: 1px dashed var(--border-debug);
+}
+
+.quick-login-title {
+  font-size: 0.9rem;
+  color: var(--text-debug);
+  margin-bottom: 0.75rem;
+}
+
+.quick-login-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.switch-link {
+  margin-top: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.switch-link a {
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.switch-link a:hover {
+  text-decoration: underline;
 }
 
 /* Button Styles */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
-  border: 2px solid transparent;
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-base);
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  line-height: var(--line-height-normal);
-  min-height: 48px; /* Accessibility: minimum touch target */
+  transition: all 0.2s;
 }
 
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
-}
-
-.btn-full {
-  width: 100%;
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
+  background-color: #2563eb;
   color: white;
-  border-color: var(--primary-color);
+  border-color: #2563eb;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--primary-color-dark);
-  border-color: var(--primary-color-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  background-color: #1d4ed8;
 }
 
-.btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.btn-social {
-  background-color: var(--surface-0);
-  color: var(--text-color);
+.btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   border-color: var(--border-color);
-  width: 100%;
 }
 
-.btn-social:hover:not(:disabled) {
-  background-color: var(--surface-50);
-  border-color: var(--border-color);
-  transform: translateY(-1px);
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-primary);
 }
 
-.btn-loading {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
 }
 
-.btn-loading svg {
-  animation: spin 1s linear infinite;
+/* CSS Variables for Light & Dark Mode */
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-loading: #f1f5f9;
+  --bg-debug: #eff6ff;
+  --border-color: #e2e8f0;
+  --border-debug: #3b82f6;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+  --text-debug: #1e40af;
+  --bg-error: #fef2f2;
+  --text-error: #ef4444;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-loading: #334155;
+  --bg-debug: #1e3a8a;
+  --border-color: #4a5568;
+  --border-debug: #60a5fa;
+  --text-primary: #f7fafc;
+  --text-secondary: #a0aec0;
+  --text-debug: #93c5fd;
+  --bg-error: #452323;
+  --text-error: #fca5a5;
 }
 
-/* Divider */
-.auth-divider {
-  position: relative;
-  margin: 2rem 0;
-  text-align: center;
-}
-
-.auth-divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: var(--border-color);
-}
-
-.auth-divider span {
-  background-color: var(--surface-card);
-  color: var(--text-color-secondary);
-  padding: 0 1rem;
-  font-size: var(--font-size-sm);
-  position: relative;
-}
-
-/* Social Login */
-.social-login {
-  margin-bottom: 2rem;
-}
-
-/* Switch Link */
-.switch-link {
-  text-align: center;
-  color: var(--text-color-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.switch-link p {
-  margin: 0;
-}
-
-.switch-link a {
-  font-weight: 600;
-  color: var(--primary-color);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.switch-link a:hover {
-  color: var(--primary-color-dark);
-  text-decoration: underline;
-}
-
-/* Mobile Responsive */
+/* PERBAIKAN: Mobile responsiveness */
 @media (max-width: 480px) {
   .auth-container {
     padding: 0.5rem;
-    align-items: flex-start;
-    padding-top: 2rem;
   }
   
   .auth-card {
-    padding: 1.5rem 1rem;
-    max-width: none;
-    border-radius: var(--border-radius-lg);
-    margin: 0;
+    padding: 1.5rem;
   }
   
   .card-title {
-    font-size: var(--font-size-xl);
+    font-size: 1.5rem;
   }
   
-  .form-options {
+  .quick-login-buttons {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
   }
   
-  .form-input {
-    font-size: 16px; /* Prevent zoom on iOS */
+  .btn-small {
+    width: 100%;
   }
-}
-
-/* Tablet styles */
-@media (min-width: 481px) and (max-width: 768px) {
-  .auth-card {
-    max-width: 450px;
-    padding: 2.5rem 2rem;
-  }
-}
-
-/* Desktop styles */
-@media (min-width: 769px) {
-  .auth-card {
-    max-width: 420px;
-    padding: 3rem 2.5rem;
-  }
-  
-  .btn:hover {
-    transform: translateY(-2px);
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .form-input {
-    border-width: 2px;
-  }
-  
-  .btn {
-    border-width: 2px;
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .btn,
-  .form-input,
-  .password-toggle {
-    transition: none;
-  }
-  
-  .btn-loading svg {
-    animation: none;
-  }
-}
-
-/* Dark mode specific adjustments */
-.dark .auth-container {
-  background: linear-gradient(135deg, var(--surface-0) 0%, var(--surface-50) 100%);
-}
-
-.dark .form-error {
-  background-color: rgba(239, 68, 68, 0.1);
-}
-
-.dark .auth-divider span {
-  background-color: var(--surface-card);
 }
 </style>
