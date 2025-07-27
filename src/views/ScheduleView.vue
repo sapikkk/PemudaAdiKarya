@@ -491,7 +491,7 @@
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { gantt } from "dhtmlx-gantt";
 import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
-import { useTasksStore } from "../stores/tasksStore";
+import { useTasksStore } from "@/stores/tasksStore";
 import { useProposalStore } from "@/stores/proposalStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useToast } from "primevue/usetoast";
@@ -1009,14 +1009,20 @@ const showHistory = (prod) => {
 onMounted(async () => {
   try {
     loading.value = true;
+    
+    // Pastikan semua store diinisialisasi sebelum digunakan
     await Promise.all([
       tasksStore.fetchTasks(),
-      proposalStore.fetchProposals(),
+      proposalStore.fetchProposals()
     ]);
-    await initGantt();
+    
+    // Tunggu sampai data siap sebelum inisialisasi Gantt
+    if (tasksStore.tasks && tasksStore.tasks.length) {
+      await initGantt();
+    }
   } catch (err) {
     console.error("Gagal memuat data:", err);
-    error.value = err.message;
+    error.value = err.message || 'Gagal memuat data';
   } finally {
     loading.value = false;
   }
