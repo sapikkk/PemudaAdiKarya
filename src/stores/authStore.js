@@ -1,8 +1,15 @@
 import { defineStore } from 'pinia';
 import { useRouter } from 'vue-router';
 
-// Ganti URL ini agar sesuai dengan port json-server Anda
-const API_URL = 'http://localhost:3001/users'; // <-- DIUBAH DARI 3000 KE 3001
+// API URL yang dinamis berdasarkan environment
+const getApiUrl = () => {
+  // Prioritas: environment variable -> production check -> fallback
+  const baseUrl = import.meta.env.VITE_API_URL || 
+                  (import.meta.env.PROD ? '/api' : 'http://localhost:3001');
+  return `${baseUrl}/users`;
+};
+
+const API_URL = getApiUrl();
 
 export const useAuthStore = defineStore('auth', {
     // --------------------------------------------------
@@ -36,10 +43,17 @@ export const useAuthStore = defineStore('auth', {
             this.error = null;
             try {
                 // 1. Ambil data user dari API berdasarkan email
-                const response = await fetch(`${API_URL}?email=${credentials.email}`);
+                const response = await fetch(`${API_URL}?email=${credentials.email}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
                 if (!response.ok) {
-                    throw new Error('Gagal menghubungi server.');
+                    throw new Error(`Server error: ${response.status}`);
                 }
+                
                 const users = await response.json();
 
                 // 2. Cek apakah user ditemukan dan password cocok
@@ -53,7 +67,8 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('user', JSON.stringify(loggedInUser));
 
             } catch (error) {
-                this.error = error.message;
+                console.error('Login error:', error);
+                this.error = error.message || 'Terjadi kesalahan saat login';
                 this.user = null;
                 localStorage.removeItem('user');
             } finally {
@@ -70,7 +85,17 @@ export const useAuthStore = defineStore('auth', {
             this.error = null;
             try {
                 // 1. Cek apakah email sudah terdaftar
-                const checkResponse = await fetch(`${API_URL}?email=${userData.email}`);
+                const checkResponse = await fetch(`${API_URL}?email=${userData.email}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                if (!checkResponse.ok) {
+                    throw new Error(`Server error: ${checkResponse.status}`);
+                }
+                
                 const existingUsers = await checkResponse.json();
                 if (existingUsers.length > 0) {
                     throw new Error('Email ini sudah terdaftar. Silakan gunakan email lain.');
@@ -91,11 +116,12 @@ export const useAuthStore = defineStore('auth', {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Registrasi gagal. Silakan coba lagi.');
+                    throw new Error(`Registrasi gagal: ${response.status}`);
                 }
 
             } catch (error) {
-                this.error = error.message;
+                console.error('Register error:', error);
+                this.error = error.message || 'Terjadi kesalahan saat registrasi';
             } finally {
                 this.loading = false;
             }
