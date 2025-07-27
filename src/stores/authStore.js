@@ -2,7 +2,7 @@
         import { useRouter } from 'vue-router';
 
         // Ganti URL ini agar sesuai dengan port json-server Anda
-        const API_URL = 'http://localhost:3001/users'; // <-- DIUBAH DARI 3000 KE 3001
+        const API_URL = 'https://pemudaadikarya.vercel.app/api/users'; // <-- DIUBAH DARI 3000 KE 3001
 
         export const useAuthStore = defineStore('auth', {
             // --------------------------------------------------
